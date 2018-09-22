@@ -5,7 +5,7 @@
 	"description": "Netliva Image Library",
 	"autoload": {
 		"psr-4": {
-			"Netliva\\ImageLib": ""
+			"App\\Netliva\\ImageLibBundle": ""
 		}
 	},
 	"require": {
