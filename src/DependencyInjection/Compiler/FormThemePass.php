@@ -1,5 +1,5 @@
 <?php
-namespace App\Netliva\ImageLibBundle\DependencyInjection\Compiler;
+namespace Netliva\ImageLibBundle\DependencyInjection\Compiler;
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;

@@ -1,5 +1,5 @@
 <?php
-namespace App\Netliva\ImageLibBundle\Form\Type;
+namespace Netliva\ImageLibBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;

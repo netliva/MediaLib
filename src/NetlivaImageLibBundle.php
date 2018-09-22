@@ -1,8 +1,8 @@
 <?php
-namespace App\Netliva\ImageLibBundle;
+namespace Netliva\ImageLibBundle;
 
 
-use App\Netliva\ImageLibBundle\DependencyInjection\Compiler\FormThemePass;
+use Netliva\ImageLibBundle\DependencyInjection\Compiler\FormThemePass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
