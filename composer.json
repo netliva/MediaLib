@@ -4,7 +4,7 @@
 	"type": "library",
 	"description": "Netliva Image Library",
 	"autoload": {
-		"psr-0": {
+		"psr-4": {
 			"Netliva\\ImageLib": ""
 		}
 	},
