@@ -5,7 +5,7 @@
 	"description": "Netliva Image Library",
 	"autoload": {
 		"psr-0": {
-			"Netliva\\ImageLib": "src/"
+			"Netliva\\ImageLib": ""
 		}
 	},
 	"require": {
