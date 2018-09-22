@@ -8,7 +8,6 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class NetlivaImageLibBundle extends Bundle
 {
-
 	/**
 	 * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
 	 */
