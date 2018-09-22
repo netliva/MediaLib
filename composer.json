@@ -1,0 +1,16 @@
+{
+	"name": "netliva/imagelib",
+	"license": "MIT",
+	"type": "library",
+	"description": "Netliva Image Library",
+	"autoload": {
+		"psr-0": {
+			"Netliva\\ImageLib": "src/"
+		}
+	},
+	"require": {
+		"php": ">=5.3.3",
+		"symfony/symfony": "2.6.*"
+	},
+	"minimum-stability": "stable"
+}

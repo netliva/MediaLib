@@ -1,0 +1,19 @@
+{% block netliva_image_lib_widget %}
+	<div>
+		{{ form_widget(form) }}
+		{%- set id = id~'_button' -%}
+		{%- set full_name = '' -%}
+		{{- block('button_widget') -}}
+	</div>
+	<script type="text/javascript">
+		window.onload = function() {
+			if (window.jQuery) {
+				$("#{{ id }}").click(function () {
+
+				})
+			} else {
+				document.getElementById("{{ id }}").parentNode.innerHTML = '<i style="color: red;">Netliva Image Library Module require JQuery.</i>';
+			}
+		}
+	</script>
+{% endblock %}
