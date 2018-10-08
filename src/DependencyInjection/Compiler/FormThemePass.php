@@ -1,5 +1,5 @@
 <?php
-namespace Netliva\ImageLibBundle\DependencyInjection\Compiler;
+namespace Netliva\MediaLibBundle\DependencyInjection\Compiler;
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -12,7 +12,7 @@ class FormThemePass implements CompilerPassInterface
 	public function process(ContainerBuilder $container)
 	{
 		$resources = $container->getParameter('twig.form.resources');
-		$formResources = ["@NetlivaImageLib/Form/theme.html.twig"];
+		$formResources = ["@NetlivaMediaLib/Form/theme.html.twig"];
 
 		$container->setParameter('twig.form.resources', array_merge($resources, $formResources));
 	}

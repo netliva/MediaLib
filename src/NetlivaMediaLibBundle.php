@@ -1,12 +1,12 @@
 <?php
-namespace Netliva\ImageLibBundle;
+namespace Netliva\MediaLibBundle;
 
 
-use Netliva\ImageLibBundle\DependencyInjection\Compiler\FormThemePass;
+use Netliva\MediaLibBundle\DependencyInjection\Compiler\FormThemePass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class NetlivaImageLibBundle extends Bundle
+class NetlivaMediaLibBundle extends Bundle
 {
 	/**
 	 * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container

@@ -1,11 +1,11 @@
 {
-	"name": "netliva/imagelib",
+	"name": "netliva/medialib",
 	"license": "MIT",
 	"type": "library",
-	"description": "Netliva Image Library",
+	"description": "Netliva Media Library",
 	"autoload": {
 		"psr-4": {
-			"Netliva\\ImageLibBundle\\": "src/"
+			"Netliva\\MediaLibBundle\\": "src/"
 		}
 	},
 	"require": {

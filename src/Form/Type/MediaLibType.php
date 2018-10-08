@@ -1,14 +1,14 @@
 <?php
-namespace Netliva\ImageLibBundle\Form\Type;
+namespace Netliva\MediaLibBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class ImageLibType extends AbstractType
+class MediaLibType extends AbstractType
 {
 
 	public function buildForm (FormBuilderInterface $builder, array $options)
@@ -28,11 +28,11 @@ class ImageLibType extends AbstractType
 
 	public function getBlockPrefix ()
 	{
-		return 'netliva_image_lib';
+		return 'netliva_media_lib';
 	}
 
 	public function getParent ()
 	{
-		return HiddenType::class;
+		return TextType::class;
 	}
 }
