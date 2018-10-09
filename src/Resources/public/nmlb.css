@@ -1,0 +1,93 @@
+.nmlb-modal { font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif; font-size: 12px; }
+.nmlb-modal * { box-sizing: content-box; }
+.nmlb-modal input[type=text], .nmlb-modal input[type=password], .nmlb-modal input[type=number], .nmlb-modal input[type=search], .nmlb-modal input[type=email], .nmlb-modal input[type=url], .nmlb-modal select, .nmlb-modal textarea {
+	font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
+	font-size: 14px; border-width: 1px; border-style: solid; border-color: #ddd; box-sizing: border-box;
+}
+.nmlb-modal .nmlb-icon { background-image: url(images/uploader-icons.png); display: inline-block; background-repeat: no-repeat; height: 15px; width: 15px; margin: 5px; }
+.nmlb-modal-close .nmlb-icon { background-position: -100px 0;  }
+.nmlb-modal { position: fixed; left:30px; right:30px; top:30px; bottom:30px; box-shadow: 4px 4px 8px rgba(0,0,0,0.5); background: #fcfcfc;  z-index: 1000; -webkit-border-radius: 2px;-moz-border-radius: 2px;border-radius: 2px; }
+.nmlb-modal-back { position: fixed; left: 0; right: 0; top: 0; bottom: 0; background: black; opacity: 0.5; z-index: 999; }
+.nmlb-modal-close { height: 32px; width: 32px; background: transparent; border: none; padding: 0; position: absolute; right: 5px; top:5px; cursor: pointer; z-index: 300; }
+.nmlb-frame-title, .nmlb-frame-router { position: absolute; left: 0px;right: 0; z-index: 200; }
+.nmlb-frame-content, .nmlb-frame-toolbar { left: 0px; height: auto; position: absolute; right: 0; }
+.nmlb-frame-title { top: 0;height: 50px; }
+.nmlb-frame-title h1 { padding: 0 16px;font-size: 22px;line-height: 50px;margin: 0; }
+.nmlb-frame-router { top: 50px; height: 36px; }
+.nmlb-frame-router ul { list-style: none; position: relative; padding: 0 6px; margin: 0; clear: both;user-select: none; }
+.nmlb-frame-router ul li { position: relative; display:inline-block; float: left; padding: 8px 10px 9px; margin: 0; height: 18px; cursor: pointer; }
+.nmlb-frame-router ul li.active { margin: -1px -1px 0; background: #fff; border: 1px solid #ddd; border-bottom: none; }
+.nmlb-frame-content { top: 84px;bottom: 61px;width: auto;margin: 0;overflow: auto;background: #fff;border-top: 1px solid #ddd;  }
+.nmlb-frame-toolbar { z-index: 100; bottom: 60px; }
+.nmlb-toolbar { position: absolute; top: 0; bottom: -45px; left: 0; right: 0; height: auto; overflow: initial; border-top: 1px solid #ddd; padding: 0 16px; }
+.nmlb-browser-toolbar { position: absolute; top: 0; left: 0; right: 300px; z-index: 100; height: 50px; padding: 0 16px; border: 0 solid #ddd; overflow: hidden; }
+.nmlb-browser .nmlb-attachments { position: absolute; top: 50px; left: 0; right: 300px; bottom: 0; overflow: auto; outline: 0; padding: 2px 8px 8px; margin: 0; }
+.nmlb-sidebar { position: absolute; top: 0; bottom: 0; right: 0; width: 267px; padding: 0 16px 24px; z-index: 75; border-left: 1px solid #ddd; overflow: auto; background: #f3f3f3; }
+.nmlb-toolbar-left { float: left; height: 100%; max-width: 66%; }
+.nmlb-toolbar-right { float: right; height: 100%; max-width: 33%; }
+.nmlb-browser-search { width: 100%; height: auto; padding: 3px 6px; margin: 11px 1px 1px;}
+
+.nmlb-attachment {
+	position: relative; float: left; padding: 8px; margin: 0; color: #444; cursor: pointer; list-style: none; text-align: center;
+	-webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; width: 25%; box-sizing: border-box;
+}
+.nmlb-attachment:focus { box-shadow: inset 0 0 2px 3px #fff, inset 0 0 0 7px #5b9dd9; outline: 0; }
+.nmlb-attachment.selected { box-shadow: inset 0 0 0 5px #fff, inset 0 0 0 7px #6a819f; }
+.nmlb-attachment.active { box-shadow: inset 0 0 0 3px #fff, inset 0 0 0 7px #0073aa; }
+.nmlb-attachment-preview { position: relative; box-shadow: inset 0 0 15px rgba(0,0,0,.1), inset 0 0 0 1px rgba(0,0,0,.05); background: #eee; cursor: pointer; }
+.nmlb-attachment-preview:before { content: ""; display: block; padding-top: 100%; }
+.nmlb-attachment .thumbnail {overflow: hidden;position: absolute;top: 0;right: 0;bottom: 0;left: 0;opacity: 1;transition: opacity .1s;}
+.nmlb-attachment .thumbnail .centered {position: absolute;top: 0;left: 0;width: 100%;height: 100%;-webkit-transform: translate(50%,50%);transform: translate(50%,50%);}
+.nmlb-attachment .thumbnail:after {content: "";display: block;position: absolute;top: 0;left: 0;right: 0;bottom: 0;box-shadow: inset 0 0 0 1px rgba(0,0,0,.1);overflow: hidden;}
+
+.nmlb-attachment .check {
+	display: none; height: 24px; width: 24px; padding: 0; border: 0; position: absolute; z-index: 10; top: 0; right: 0;
+	outline: 0; background: #eee; cursor: pointer; box-shadow: 0 0 0 1px #fff, 0 0 0 2px #6a819f;
+}
+.nmlb-attachment.selected .check { display: block; }
+.nmlb-attachment.active .check, .nmlb-attachment.selected .check:focus {
+	background-color: #0073aa; box-shadow: 0 0 0 1px #fff, 0 0 0 2px #0073aa;
+}
+
+.nmlb-attachment .check .nmlb-icon { background-position: -1px 0;  }
+.nmlb-attachment.active .check .nmlb-icon { background-position: -21px 0; }
+.nmlb-attachment .check:hover .nmlb-icon {background-position: -40px 0;}
+.nmlb-attachment.active .check:hover .media-modal-icon,
+.nmlb-attachment.selected .check:focus .media-modal-icon,
+.nmlb-attachment.selected .check:hover .media-modal-icon {background-position: -60px 0;}
+
+
+.nmlb-attachment .thumbnail .centered img {-webkit-transform: translate(-50%,-50%); transform: translate(-50%,-50%);}
+.nmlb-attachment .thumbnail img { position: absolute; top: 0;left: 0; max-height: 100%; }
+
+
+.nmlb-modal .nmlb-button-link {margin: 0;padding: 0;box-shadow: none;border: 0;border-radius: 0;background: 0 0;outline: 0;cursor: pointer;text-align: left;color: #0073aa;text-decoration: underline;transition-property: border, background, color;transition-duration: .05s;transition-timing-function: ease-in-out}
+.nmlb-modal .nmlb-button-link:active, .nmlb-modal .nmlb-button-link:hover {color: #00a0d2}
+.nmlb-modal .nmlb-button-link:focus {color: #124964;box-shadow: 0 0 0 1px #5b9dd9, 0 0 2px 1px rgba(30, 140, 190, .8)}
+
+.nmlb-selection {position: absolute;top: 0;left: 0;right: 350px;height: 60px;padding: 0 0 0 16px;overflow: hidden;white-space: nowrap}
+.nmlb-selection .nmlb-selection-info {display: inline-block;font-size: 12px;height: 60px;margin-right: 10px;vertical-align: top}
+.nmlb-selection.editing, .nmlb-selection.empty, .nmlb-selection.one .edit-selection {display: none}
+.nmlb-selection .nmlb-count {display: block;padding-top: 12px;font-size: 14px;line-height: 20px;font-weight: 600}
+.nmlb-selection .nmlb-attachments, .nmlb-selection .nmlb-selection-view {display: inline-block;vertical-align: top}
+.nmlb-selection .nmlb-button-link {float: left;padding: 1px 8px;margin: 1px 8px 1px -8px;line-height: 16px;border-right: 1px solid #ddd;color: #0073aa;text-decoration: none}
+.nmlb-selection .nmlb-button-link:focus, .nmlb-selection .nmlb-button-link:hover {color: #00a0d2}
+.nmlb-selection .nmlb-button-link:last-child {border-right: 0;margin-right: 0}
+.nmlb-selection-info .nmlb-clear-selection {color: #bc0b0b}
+.nmlb-selection-info .nmlb-clear-selection:focus, .nmlb-selection-info .nmlb-clear-selection:hover {color: #dc3232}
+.nmlb-selection .nmlb-attachments {height: 48px;margin: 6px;padding: 0;overflow: hidden}
+.nmlb-selection .nmlb-attachment {width: 40px;padding: 0;margin: 4px}
+.nmlb-selection .nmlb-attachment .thumbnail {top: 0;right: 0;bottom: 0;left: 0}
+.nmlb-selection .nmlb-attachment .icon {width: 50%}
+.nmlb-selection .nmlb-attachment-preview {box-shadow: none;background: 0 0}
+.nmlb-modal .nmlb-selection .nmlb-attachment.active:focus, .nmlb-modal .nmlb-selection .nmlb-attachment:focus, .nmlb-modal .nmlb-selection .selected.nmlb-attachment:focus {box-shadow: 0 0 0 1px #fff, 0 0 2px 3px #5b9dd9}
+.nmlb-modal .nmlb-selection .nmlb-attachment.selected {box-shadow: none}
+.nmlb-modal .nmlb-selection .nmlb-attachment.active {box-shadow: 0 0 0 1px #fff, 0 0 0 3px #0073aa}
+.nmlb-selection:after {content: "";display: block;position: absolute;top: 0;right: 0;bottom: 0;width: 25px;background-image: linear-gradient(to left, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0))}
+.nmlb-selection .nmlb-attachment .filename {display: none}
+
+
+. {}
+. {}
+. {}
+
