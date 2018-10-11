@@ -4,9 +4,17 @@ if (window.jQuery)
 
 		$.nmlb = {
 			// ===============
-			modal: null,
-			selectedMedias: {},
-
+			modal				: null,
+			selected_medias		: {},
+			dropped_files		: [],
+			file_input_name		: "nmlb_form[nmlb-file][]",
+			is_uploading		: false,
+			upload_url			: "/netliva/file/upload",
+			file_list_url		: "/netliva/file/list",
+			is_advanced_upload	: function() {
+				var div = document.createElement('div');
+				return (('draggable' in div) || ('ondragstart' in div && 'ondrop' in div)) && 'FormData' in window && 'FileReader' in window;
+			}(),
 			// === LANGUAGE ===
 			lang: "en",
 			langs: {},
@@ -17,6 +25,7 @@ if (window.jQuery)
 				search_input_ph	: "Ortam dosyalarında ara...",
 				selected		: "seçildi",
 				clear			: "Temizle",
+				upload_area_msg	: "Yüklemek için dosyaları sürükleyip bırakın",
 			},
 
 			// === FUNCTIONS ===
@@ -39,6 +48,8 @@ if (window.jQuery)
 					var toolbar = $('<div class="nmlb-frame-toolbar"><div class="nmlb-toolbar"></div></div>');
 					var toolbarLeft = $('<div class="nmlb-toolbar-left"></div>');
 					var toolbarRight = $('<div class="nmlb-toolbar-right"></div>');
+					var uploader = $('<div class="nmlb-frame-uploader"><div class="nmlb-uploader-window"><div class="nmlb-uploader-window-content"><h1>'+this.l.upload_area_msg+'</h1></div></div></div>');
+					var file = $('<div class="nmlb-frame-file"><input type="file" name="'+this.file_input_name+'" id="nmlb-file" multiple /></div>');
 
 					toolbarLeft.appendTo(toolbar.find(".nmlb-toolbar"));
 					toolbarRight.appendTo(toolbar.find(".nmlb-toolbar"));
@@ -48,10 +59,13 @@ if (window.jQuery)
 					router.appendTo(this.modal);
 					content.appendTo(this.modal);
 					toolbar.appendTo(this.modal);
+					uploader.appendTo(this.modal);
+					file.appendTo(this.modal);
 
 
+					file.find("input").change($.proxy(this.upload,this));
 					router.find("li").click($.proxy(this.route,this));
-					close_btn.click(function(){$("#netlivaMediaModal").hide();});
+					close_btn.click($.proxy(this.close,this));
 
 					$("body").append(container);
 				}
@@ -61,8 +75,66 @@ if (window.jQuery)
 					this.modal = $("#netlivaMediaModal .nmlb-modal")
 				}
 
+				$(document).on("dragenter",$.proxy(this.dragenter,this));
+				$(document).on("dragleave",$.proxy(this.dragleave,this));
+				$(document).on("dragover",$.proxy(this.dragover,this));
+				$(document).on("drop",$.proxy(this.drop,this));
+
 				this.modal.find('.nmlb-frame-router li[data-href="browser"]').click();
 
+			},
+			close: function (e)
+			{
+				$("#netlivaMediaModal").hide();
+				$(document).off("dragenter",$.proxy(this.dragenter,this));
+				$(document).off("dragleave",$.proxy(this.dragleave,this));
+				$(document).off("dragover",$.proxy(this.dragover,this));
+				$(document).off("drop",$.proxy(this.drop,this));
+			},
+			dragenter: function (e)
+			{
+				e.preventDefault();
+				if(e.relatedTarget == null )
+				{
+					var uploader = this.modal.find(".nmlb-frame-uploader .nmlb-uploader-window");
+					uploader.show();
+					setTimeout(function(){ uploader.css({opacity:1}); }, 10);
+				}
+			},
+			dragleave: function (e)
+			{
+				e.preventDefault();
+				if(e.relatedTarget == null)
+				{
+					var uploader = this.modal.find(".nmlb-frame-uploader .nmlb-uploader-window");
+					uploader.css({opacity:0});
+					setTimeout(function(){ if (uploader.css("opacity") == 0) uploader.hide(); }, 300);
+				}
+			},
+			dragover: function (e)
+			{
+				e.preventDefault();
+			},
+			drop: function (e)
+			{
+				e.preventDefault();
+				var dt = e.originalEvent.dataTransfer;
+				var length = dt.items.length;
+				for (var i = 0; i < length; i++) {
+					var entry = dt.items[i].webkitGetAsEntry();
+					console.log(entry);
+					if (entry.isFile) {
+						console.log("filee");
+					} else if (entry.isDirectory) {
+						console.log("directoryyy");
+					}
+				}
+
+				this.dropped_files = e.originalEvent.dataTransfer.files;
+
+				$(document).trigger("dragleave");
+
+				this.upload();
 			},
 			route : function (e)
 			{
@@ -78,7 +150,10 @@ if (window.jQuery)
 			},
 			content_upload: function ()
 			{
-				var upload = $("<div>upload</div>");
+				var upload = $('<div class="box__input">' +
+					'<label for="nmlb-file"><strong>Choose a file</strong><span class="box__dragndrop"> or drag it here</span>.</label><br>' +
+					'<button class="box__button" type="submit">Upload</button>' +
+				'</div>');
 				this.modal.find(".nmlb-frame-content").html(upload);
 			},
 			content_browser: function ()
@@ -105,10 +180,7 @@ if (window.jQuery)
 
 				this.update_selection();
 
-
-				for (var i = 0; i < 15; i++) {
-					this.new_attachment(i);
-				}
+				this.file_list();
 
 			},
 			build_browser: function ()
@@ -130,13 +202,28 @@ if (window.jQuery)
 				this.modal.find(".nmlb-frame-content").html(browser);
 
 			},
-			new_attachment: function (id)
+			file_list: function ()
+			{
+				// listeyi temizle
+				this.modal.find('.nmlb-browser .nmlb-attachments').html("");
+
+				var that = this;
+				$.ajax({
+					url:this.file_list_url, data:{}, dataType: "json", type: "post",
+					success: function (response) {
+						$.each(response, function (key, data) {
+							that.new_attachment(data);
+						})
+					}
+				});
+			},
+			new_attachment: function (data)
 			{
 				var attachments = this.modal.find('.nmlb-browser .nmlb-attachments');
 
 				var attachment = this.prepare_attachment({
-					id: id,
-					url: "http://www.bilalyilmaz.com/files/yuklemeler/2016/11/logo-1-100x94.png",
+					id: data.id,
+					url: data.url,
 				});
 
 				attachment.appendTo(attachments);
@@ -146,7 +233,7 @@ if (window.jQuery)
 				console.log("select");
 				var $el = $(e.currentTarget).parent();
 
-				if (!this.selectedMedias.hasOwnProperty($el.data("id"))) this.selectedMedias[$el.data("id")] = {"url":$el.find("img").attr("src")}
+				if (!this.selected_medias.hasOwnProperty($el.data("id"))) this.selected_medias[$el.data("id")] = {"url":$el.find("img").attr("src")}
 				this.update_selection();
 
 				this.modal.find('.nmlb-attachment:not(*[data-id="'+$el.data("id")+'"])').removeClass("active");
@@ -158,34 +245,34 @@ if (window.jQuery)
 				console.log("deselect");
 				var $el = $(e.currentTarget).parent();
 
-				if (this.selectedMedias.hasOwnProperty($el.data("id"))) delete(this.selectedMedias[$el.data("id")]);
+				if (this.selected_medias.hasOwnProperty($el.data("id"))) delete(this.selected_medias[$el.data("id")]);
 				this.update_selection();
 
 				this.modal.find('.nmlb-attachment[data-id="'+$el.data("id")+'"]').removeClass("active");
 				this.modal.find('.nmlb-attachment[data-id="'+$el.data("id")+'"]').removeClass("selected");
 			},
 			clear_selections : function () {
-				this.selectedMedias = {}
+				this.selected_medias = {}
 				this.update_selection();
 				this.modal.find('.nmlb-attachment').removeClass("active");
 				this.modal.find('.nmlb-attachment').removeClass("selected");
 			},
 			update_selection : function () {
-				console.log(this.selectedMedias);
-				console.log(this.size(this.selectedMedias));
+				console.log(this.selected_medias);
+				console.log(this.size(this.selected_medias));
 				selection = this.modal.find(".nmlb-frame-toolbar .nmlb-selection");
-				if (this.size(this.selectedMedias))
+				if (this.size(this.selected_medias))
 				{
 					selection.removeClass("empty");
-					selection.find(".nmlb-count").text(this.size(this.selectedMedias)+" "+this.l.selected);
+					selection.find(".nmlb-count").text(this.size(this.selected_medias)+" "+this.l.selected);
 					attachments = selection.find(".nmlb-attachments");
 					attachments.html("");
 					var that = this;
-					$.each(this.selectedMedias, function (key, val) {
+					$.each(this.selected_medias, function (key, val) {
 						var attachment = that.prepare_attachment({
 							class: "selection",
 							id: key,
-							url: "http://www.bilalyilmaz.com/files/yuklemeler/2016/11/logo-1-100x94.png",
+							url: val.url,
 						});
 
 						attachment.appendTo(attachments);
@@ -217,6 +304,73 @@ if (window.jQuery)
 				}
 
 				return attachment;
+			},
+			upload : function ()
+			{
+				if (this.is_uploading) return false;
+
+				if(this.is_advanced_upload)
+				{
+					var that = this;
+					var ajaxData = new FormData();
+
+					if (this.dropped_files) {
+						$.each( this.dropped_files, function(i, file) {
+							console.log(file);
+							ajaxData.append( that.file_input_name, file );
+						});
+					}
+
+					$.ajax({
+						url: this.upload_url,
+						type: "post",
+						data: ajaxData,
+						dataType: 'json',
+						cache: false,
+						contentType: false,
+						processData: false,
+						complete: function() {
+							that.is_uploading = false;
+							that.file_list();
+						},
+						success: function(data) {
+
+						},
+						error: function() {
+							// Log the error, show an alert, whatever works for you
+						}
+					});
+				}
+				else
+				{
+					var iframeName  = 'uploadiframe' + new Date().getTime();
+					$iframe   = $('<iframe name="' + iframeName + '" style=""></iframe>');
+
+					$form = $("<form />");
+					$form.attr('target', iframeName);
+					$form.attr('method', "post");
+					$form.attr('enctype', "multipart/form-data");
+					$form.attr('action', this.upload_url);
+					this.modal.find('input[name="'+this.file_input_name+'"]').clone().appendTo($form);
+
+					$('body').append($form);
+					$('body').append($iframe);
+
+					$form.submit();
+
+
+					console.log($iframe);
+					$iframe.one('load', function() {
+						console.log("sss");
+						console.log($iframe.contents().find('body').text());
+						/*
+						var data = JSON.parse($iframe.contents().find('body').text());
+						if (!data.success) $errorMsg.text(data.error);
+						*/
+						$iframe.remove();
+						$form.remove();
+					});
+				}
 			},
 			readLang : function () {
 				if (this.langs[this.lang] != undefined)

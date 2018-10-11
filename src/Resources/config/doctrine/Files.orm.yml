@@ -1,0 +1,32 @@
+Netliva\MediaLibBundle\Entity\Files:
+    type: entity
+    table: NetlivaFiles
+    id:
+        id:
+            column: NF_AutoID
+            type: integer
+            generator: { strategy: AUTO }
+    fields:
+        fileInfo:
+            column: NF_FileInfo
+            type: json_array
+        title:
+            column: NF_Title
+            type: string
+            length: 255
+        caption:
+            column: NF_Caption
+            type: text
+            nullable: true
+        alt:
+            column: NF_Alternative
+            type: string
+            length: 255
+            nullable: true
+        description:
+            column: NF_Description
+            type: text
+            nullable: true
+        addAt:
+            column: NF_CreateDateTime
+            type: datetime
