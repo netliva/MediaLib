@@ -27,17 +27,28 @@
 .nmlb-upload-content button {padding: 15px 30px;border: 1px solid #ccc;background: #f7f7f7;color: #555;border-radius: 2px;box-shadow: 0 1px 0 #ccc;}
 
 .nmlb-toolbar { position: absolute; top: 0; bottom: -45px; left: 0; right: 0; height: auto; overflow: initial; border-top: 1px solid #ddd; padding: 0 16px; }
-.nmlb-browser-toolbar { position: absolute; top: 0; left: 0; right: 300px; z-index: 100; height: 50px; padding: 0 16px; border: 0 solid #ddd; overflow: hidden; }
-.nmlb-browser .nmlb-attachments { position: absolute; top: 50px; left: 0; right: 300px; bottom: 0; overflow: auto; outline: 0; padding: 2px 8px 8px; margin: 0; }
+.nmlb-browser-toolbar { position: absolute; top: 0; left: 0; z-index: 100; height: 50px; padding: 0 16px; border: 0 solid #ddd; overflow: hidden; }
+.nmlb-browser .nmlb-attachments { position: absolute; top: 50px; left: 0; bottom: 0; overflow: auto; outline: 0; padding: 2px 8px 8px; margin: 0; transition: opacity 250ms; }
 .nmlb-sidebar { position: absolute; top: 0; bottom: 0; right: 0; width: 267px; padding: 0 16px 24px; z-index: 75; border-left: 1px solid #ddd; overflow: auto; background: #f3f3f3; }
 .nmlb-toolbar-left { float: left; height: 100%; max-width: 66%; }
 .nmlb-toolbar-right { float: right; height: 100%; max-width: 33%; }
 .nmlb-browser-search { width: 100%; height: auto; padding: 3px 6px; margin: 11px 1px 1px;}
 
+.nmlb-browser .nmlb-browser-toolbar,
+.nmlb-browser .nmlb-attachments,
+.nmlb-browser .nmlb-loading,
+.nmlb-browser .nmlb-upload-content { right: 300px;  }
+
 .nmlb-attachment {
 	position: relative; float: left; padding: 8px; margin: 0; color: #444; cursor: pointer; list-style: none; text-align: center;
 	-webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; width: 25%; box-sizing: border-box;
 }
+.nmlb-attachments.two-column .nmlb-attachment { width: 50%; }
+.nmlb-attachments.tree-column .nmlb-attachment { width: 33%; }
+.nmlb-attachments.four-column .nmlb-attachment { width: 25%; }
+.nmlb-attachments.five-column .nmlb-attachment { width: 20%; }
+.nmlb-attachments.six-column .nmlb-attachment { width: 16.66%; }
+
 .nmlb-attachment:focus { box-shadow: inset 0 0 2px 3px #fff, inset 0 0 0 7px #5b9dd9; outline: 0; }
 .nmlb-attachment.selected { box-shadow: inset 0 0 0 5px #fff, inset 0 0 0 7px #6a819f; }
 .nmlb-attachment.active { box-shadow: inset 0 0 0 3px #fff, inset 0 0 0 7px #0073aa; }
@@ -105,3 +116,30 @@
 . {}
 . {}
 
+
+.nmlb-typing { position: absolute;right: 15px;top: 7px; opacity: 0; pointer-events: none; transition: opacity 250ms; }
+@keyframes nmlb-ellipsis3 { 0%, 25% {left: 32px;-webkit-transform: scale(0);transform: scale(0);} 50% {left: 32px;-webkit-transform: scale(1);transform: scale(1);} 75% {left: 100px;} 100% {left: 168px;-webkit-transform: scale(1);transform: scale(1);} }
+@-webkit-keyframes nmlb-ellipsis3 { 0%, 25% {left: 32px;-webkit-transform: scale(0);transform: scale(0);} 50% {left: 32px;-webkit-transform: scale(1);transform: scale(1);} 75% {left: 100px;} 100% {left: 168px;-webkit-transform: scale(1);transform: scale(1);} }
+@keyframes nmlb-ellipsis2 { 0% {-webkit-transform: scale(1);transform: scale(1);} 25%, 100% {-webkit-transform: scale(0);transform: scale(0);} }
+@-webkit-keyframes nmlb-ellipsis2 { 0% {-webkit-transform: scale(1);transform: scale(1);} 25%, 100% {-webkit-transform: scale(0);transform: scale(0);} }
+@keyframes nmlb-ellipsis { 0% {left: 32px;-webkit-transform: scale(0);transform: scale(0);} 25% {left: 32px;-webkit-transform: scale(1);transform: scale(1);} 50% {left: 100px;} 75% {left: 168px;-webkit-transform: scale(1);transform: scale(1);} 100% {left: 168px;-webkit-transform: scale(0);transform: scale(0);} }
+@-webkit-keyframes nmlb-ellipsis { 0% {left: 32px;-webkit-transform: scale(0);transform: scale(0);} 25% {left: 32px;-webkit-transform: scale(1);transform: scale(1);} 50% {left: 100px;} 75% {left: 168px;-webkit-transform: scale(1);transform: scale(1);} 100% {left: 168px;-webkit-transform: scale(0);transform: scale(0);} }
+.nmlb-ellipsis {position: relative;}
+.nmlb-ellipsis > div {position: absolute;-webkit-transform: translate(-50%, -50%);transform: translate(-50%, -50%);width: 40px;height: 40px;}
+.nmlb-ellipsis div > div {width: 40px;height: 40px;border-radius: 50%;background: #f00;position: absolute;top: 100px;left: 32px;-webkit-animation: nmlb-ellipsis 2s cubic-bezier(0, 0.5, 0.5, 1) infinite forwards;animation: nmlb-ellipsis 2s cubic-bezier(0, 0.5, 0.5, 1) infinite forwards;}
+.nmlb-ellipsis div:nth-child(1) div {-webkit-animation: nmlb-ellipsis2 2s cubic-bezier(0, 0.5, 0.5, 1) infinite forwards;animation: nmlb-ellipsis2 2s cubic-bezier(0, 0.5, 0.5, 1) infinite forwards;background: #0e151e;}
+.nmlb-ellipsis div:nth-child(2) div {-webkit-animation-delay: -1s;animation-delay: -1s;background: #32495c;}
+.nmlb-ellipsis div:nth-child(3) div {-webkit-animation-delay: -0.5s;animation-delay: -0.5s;background: #7394a4;}
+.nmlb-ellipsis div:nth-child(4) div {-webkit-animation-delay: 0s;animation-delay: 0s;background: #a2b4bc;}
+.nmlb-ellipsis div:nth-child(5) div {-webkit-animation: nmlb-ellipsis3 2s cubic-bezier(0, 0.5, 0.5, 1) infinite forwards;animation: nmlb-ellipsis3 2s cubic-bezier(0, 0.5, 0.5, 1) infinite forwards;background: #0e151e;}
+.nmlb-ellipsis {width: 32px !important;height: 32px !important;-webkit-transform: translate(-16px, -16px) scale(0.16) translate(16px, 16px);transform: translate(-16px, -16px) scale(0.16) translate(16px, 16px);}
+
+.nmlb-loading { position: absolute; top: 50%; left: 0; text-align: center; margin-top: -64px; opacity:0; pointer-events: none; transition: opacity 250ms;  }
+@keyframes lds-double-ring { 0% {-webkit-transform: rotate(0);transform: rotate(0);} 100% {-webkit-transform: rotate(360deg);transform: rotate(360deg);} }
+@-webkit-keyframes lds-double-ring { 0% {-webkit-transform: rotate(0);transform: rotate(0);} 100% {-webkit-transform: rotate(360deg);transform: rotate(360deg);} }
+@keyframes lds-double-ring_reverse { 0% {-webkit-transform: rotate(0);transform: rotate(0);} 100% {-webkit-transform: rotate(-360deg);transform: rotate(-360deg);} }
+@-webkit-keyframes lds-double-ring_reverse { 0% {-webkit-transform: rotate(0);transform: rotate(0);} 100% {-webkit-transform: rotate(-360deg);transform: rotate(-360deg);} }
+.lds-double-ring { position: relative; display: inline-block; }
+.lds-double-ring div { position: absolute;width: 160px;height: 160px;top: 20px;left: 20px;border-radius: 50%;border: 10px solid #000;border-color: #32495c transparent #32495c transparent;-webkit-animation: lds-double-ring 1.2s linear infinite;animation: lds-double-ring 1.2s linear infinite;}
+.lds-double-ring div:nth-child(2) { width: 136px;height: 136px;top: 32px;left: 32px;border-color: transparent #7394a4 transparent #7394a4;-webkit-animation: lds-double-ring_reverse 1.2s linear infinite;animation: lds-double-ring_reverse 1.2s linear infinite;}
+.lds-double-ring { width: 128px !important;height: 128px !important;-webkit-transform: translate(-64px, -64px) scale(0.64) translate(64px, 64px);transform: translate(-64px, -64px) scale(0.64) translate(64px, 64px);}

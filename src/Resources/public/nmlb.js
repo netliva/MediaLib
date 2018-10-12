@@ -26,6 +26,7 @@ if (window.jQuery)
 				selected		: "seçildi",
 				clear			: "Temizle",
 				upload_area_msg	: "Yüklemek için dosyaları sürükleyip bırakın",
+				not_found		: "Hiç bir öğe bulunamadı",
 				upload_msg_l1	: "Yüklemek istediğiniz dosyaları herhangi bir yere sürükleyip bırakın",
 				upload_msg_l2	: "ya da",
 				upload_msg_btn	: "Dosya Seçin",
@@ -153,27 +154,14 @@ if (window.jQuery)
 			},
 			content_upload: function ()
 			{
-				var upload = $('<div class="nmlb-upload-content">' +
-								'<label for="nmlb-file">' +
-									( this.is_advanced_upload ?
-										'<div>'+this.l.upload_msg_l1+'</div>' +
-										'<div><small>'+this.l.upload_msg_l2+'</small></div>' : ""
-									) +
-									'<div><button class="nmlb-upload-btn" type="button">'+this.l.upload_msg_btn+'</button></div>' +
-									'<div><small>'+this.l.upload_msg_l3+'</small></div>' +
-								'</label>' +
-							'</div>');
-				that = this;
-				upload.find(".nmlb-upload-btn").click(function () {
-					that.modal.find("#nmlb-file").click();
-				});
-				this.modal.find(".nmlb-frame-content").html(upload);
+				this.modal.find(".nmlb-frame-content").html(this.create_upload_content());
 			},
 			content_browser: function ()
 			{
 				this.build_browser();
 
 				var search = $('<input placeholder="'+this.l.search_input_ph+'" class="nmlb-browser-search" type="search" id="nmlb-media-search-input"></input>');
+				var typing = $('<div class="nmlb-typing"><div style="width:100%;height:100%" class="nmlb-ellipsis"><div><div></div></div><div><div></div></div><div><div></div></div><div><div></div></div><div><div></div></div></div>');
 				var selection = $(
 					'<div class="nmlb-selection">' +
 						'<div class="nmlb-selection-info">' +
@@ -188,13 +176,35 @@ if (window.jQuery)
 
 
 				selection.find(".nmlb-clear-selection").click($.proxy(this.clear_selections, this));
+				typing.appendTo(this.modal.find(".nmlb-browser-toolbar .nmlb-toolbar-right"));
 				search.appendTo(this.modal.find(".nmlb-browser-toolbar .nmlb-toolbar-right"));
 				selection.appendTo(this.modal.find(".nmlb-frame-toolbar .nmlb-toolbar .nmlb-toolbar-left"));
+
+				search.keyup($.proxy(this.search_change, this));
 
 				this.update_selection();
 
 				this.file_list();
 
+			},
+			create_upload_content: function ()
+			{
+				var upload = $('<div class="nmlb-upload-content">' +
+					'<label for="nmlb-file">' +
+					( this.is_advanced_upload ?
+							'<div>'+this.l.upload_msg_l1+'</div>' +
+							'<div><small>'+this.l.upload_msg_l2+'</small></div>' : ""
+					) +
+					'<div><button class="nmlb-upload-btn" type="button">'+this.l.upload_msg_btn+'</button></div>' +
+					'<div><small>'+this.l.upload_msg_l3+'</small></div>' +
+					'</label>' +
+					'</div>');
+				that = this;
+				upload.find(".nmlb-upload-btn").click(function () {
+					that.modal.find("#nmlb-file").click();
+				});
+
+				return upload;
 			},
 			build_browser: function ()
 			{
@@ -204,12 +214,17 @@ if (window.jQuery)
 				var sidebar = $('<div class="nmlb-sidebar"></div>');
 				var toolbarLeft = $('<div class="nmlb-toolbar-left"></div>');
 				var toolbarRight = $('<div class="nmlb-toolbar-right"></div>');
+				var loading = $('<div class="nmlb-loading"><div style="width:100%;height:100%" class="lds-double-ring"><div></div><div></div></div>');
+				var not_found = this.create_upload_content();
+				not_found.find(".nmlb-upload-content").prepend('<div>'+this.l.not_found+'</div>');
 
 				toolbarLeft.appendTo(toolbar);
 				toolbarRight.appendTo(toolbar);
 
 				toolbar.appendTo(browser);
+				loading.appendTo(browser);
 				attachments.appendTo(browser);
+				not_found.appendTo(browser);
 				sidebar.appendTo(browser);
 
 				this.modal.find(".nmlb-frame-content").html(browser);
@@ -217,19 +232,72 @@ if (window.jQuery)
 			},
 			file_list: function ()
 			{
-				// listeyi temizle
-				this.modal.find('.nmlb-browser .nmlb-attachments').html("");
+				var attcs = this.modal.find('.nmlb-browser .nmlb-attachments');
+				var notfd = this.modal.find('.nmlb-browser .nmlb-upload-content');
+				this.modal.find(".nmlb-browser .nmlb-loading").css("opacity", 1);
+
+				notfd.css("opacity", 0);
+				attcs.css("opacity", 0);
+				setTimeout(function () {
+					notfd.hide();
+					attcs.hide();
+				},300);
 
 				var that = this;
 				$.ajax({
-					url:this.file_list_url, data:{}, dataType: "json", type: "post",
+					url:this.file_list_url, dataType: "json", type: "post",
+					data:{
+						search_text: this.modal.find('.nmlb-browser .nmlb-browser-search').val()
+					},
 					success: function (response) {
-						$.each(response, function (key, data) {
-							that.new_attachment(data);
-						})
+						attcs.html("");
+
+						setTimeout(function () {
+
+							that.modal.find(".nmlb-browser .nmlb-loading").css("opacity", 0);
+							that.modal.find(".nmlb-browser .nmlb-typing").css("opacity", 0);
+
+							attcs.show();
+							setTimeout(function () { attcs.css("opacity", 1); }, 10);
+
+						},300);
+
+						if (response.length)
+						{
+
+							$.each(response, function (key, data) {
+								that.new_attachment(data);
+							})
+						}
+						else
+						{
+							notfd.show();
+							setTimeout(function () { notfd.css("opacity", 1); }, 10);
+						}
 					}
 				});
 			},
+
+			search_interval: null,
+			search_change: function ()
+			{
+				var time = 2;
+				var that = this;
+
+				this.modal.find(".nmlb-typing").css("opacity", 1);
+
+				if (this.search_interval) clearInterval(this.search_interval);
+
+				this.search_interval = setInterval(function () {
+					time--;
+					if (time<0)
+					{
+						clearInterval(that.search_interval);
+						that.file_list();
+					}
+				},100);
+			},
+
 			new_attachment: function (data)
 			{
 				var attachments = this.modal.find('.nmlb-browser .nmlb-attachments');
@@ -237,6 +305,7 @@ if (window.jQuery)
 				var attachment = this.prepare_attachment({
 					id: data.id,
 					url: data.url,
+					class: data.id in this.selected_medias ? "selected" : ""
 				});
 
 				attachment.appendTo(attachments);
@@ -282,6 +351,17 @@ if (window.jQuery)
 							class: "selection",
 							id: key,
 							url: val.url,
+						});
+
+						attachment.find(".nmlb-attachment-preview").click(function () {
+							var browser_attachments = that.modal.find('.nmlb-browser .nmlb-attachments');
+							if (browser_attachments.find(".nmlb-attachment[data-id="+key+"]").length)
+							{
+								var scTop = browser_attachments.scrollTop()+browser_attachments.find(".nmlb-attachment[data-id="+key+"]").position().top;
+								browser_attachments.animate({
+									scrollTop: Math.floor(scTop) - 5
+								},600);
+							}
 						});
 
 						attachment.appendTo(attachments);
