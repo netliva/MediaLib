@@ -26,6 +26,10 @@ if (window.jQuery)
 				selected		: "seçildi",
 				clear			: "Temizle",
 				upload_area_msg	: "Yüklemek için dosyaları sürükleyip bırakın",
+				upload_msg_l1	: "Yüklemek istediğiniz dosyaları herhangi bir yere sürükleyip bırakın",
+				upload_msg_l2	: "ya da",
+				upload_msg_btn	: "Dosya Seçin",
+				upload_msg_l3	: "Yüklenebilecek en büyük dosya boyutu: 2 MB.",
 			},
 
 			// === FUNCTIONS ===
@@ -63,7 +67,10 @@ if (window.jQuery)
 					file.appendTo(this.modal);
 
 
-					file.find("input").change($.proxy(this.upload,this));
+					that = this;
+					file.find("input").change(function () {
+						that.upload("iframe");
+					});
 					router.find("li").click($.proxy(this.route,this));
 					close_btn.click($.proxy(this.close,this));
 
@@ -118,23 +125,19 @@ if (window.jQuery)
 			drop: function (e)
 			{
 				e.preventDefault();
+				/*
 				var dt = e.originalEvent.dataTransfer;
 				var length = dt.items.length;
 				for (var i = 0; i < length; i++) {
 					var entry = dt.items[i].webkitGetAsEntry();
-					console.log(entry);
 					if (entry.isFile) {
-						console.log("filee");
 					} else if (entry.isDirectory) {
-						console.log("directoryyy");
 					}
 				}
-
+				*/
 				this.dropped_files = e.originalEvent.dataTransfer.files;
-
 				$(document).trigger("dragleave");
-
-				this.upload();
+				this.upload("dropzone");
 			},
 			route : function (e)
 			{
@@ -150,10 +153,20 @@ if (window.jQuery)
 			},
 			content_upload: function ()
 			{
-				var upload = $('<div class="box__input">' +
-					'<label for="nmlb-file"><strong>Choose a file</strong><span class="box__dragndrop"> or drag it here</span>.</label><br>' +
-					'<button class="box__button" type="submit">Upload</button>' +
-				'</div>');
+				var upload = $('<div class="nmlb-upload-content">' +
+								'<label for="nmlb-file">' +
+									( this.is_advanced_upload ?
+										'<div>'+this.l.upload_msg_l1+'</div>' +
+										'<div><small>'+this.l.upload_msg_l2+'</small></div>' : ""
+									) +
+									'<div><button class="nmlb-upload-btn" type="button">'+this.l.upload_msg_btn+'</button></div>' +
+									'<div><small>'+this.l.upload_msg_l3+'</small></div>' +
+								'</label>' +
+							'</div>');
+				that = this;
+				upload.find(".nmlb-upload-btn").click(function () {
+					that.modal.find("#nmlb-file").click();
+				});
 				this.modal.find(".nmlb-frame-content").html(upload);
 			},
 			content_browser: function ()
@@ -230,7 +243,6 @@ if (window.jQuery)
 			},
 			select_attachment : function (e)
 			{
-				console.log("select");
 				var $el = $(e.currentTarget).parent();
 
 				if (!this.selected_medias.hasOwnProperty($el.data("id"))) this.selected_medias[$el.data("id")] = {"url":$el.find("img").attr("src")}
@@ -242,7 +254,6 @@ if (window.jQuery)
 			},
 			deselect_attachment : function (e)
 			{
-				console.log("deselect");
 				var $el = $(e.currentTarget).parent();
 
 				if (this.selected_medias.hasOwnProperty($el.data("id"))) delete(this.selected_medias[$el.data("id")]);
@@ -258,8 +269,6 @@ if (window.jQuery)
 				this.modal.find('.nmlb-attachment').removeClass("selected");
 			},
 			update_selection : function () {
-				console.log(this.selected_medias);
-				console.log(this.size(this.selected_medias));
 				selection = this.modal.find(".nmlb-frame-toolbar .nmlb-selection");
 				if (this.size(this.selected_medias))
 				{
@@ -305,73 +314,101 @@ if (window.jQuery)
 
 				return attachment;
 			},
-			upload : function ()
+			upload : function (type)
 			{
 				if (this.is_uploading) return false;
 
-				if(this.is_advanced_upload)
+				if(type == "dropzone")
 				{
-					var that = this;
-					var ajaxData = new FormData();
-
-					if (this.dropped_files) {
-						$.each( this.dropped_files, function(i, file) {
-							console.log(file);
-							ajaxData.append( that.file_input_name, file );
-						});
-					}
-
-					$.ajax({
-						url: this.upload_url,
-						type: "post",
-						data: ajaxData,
-						dataType: 'json',
-						cache: false,
-						contentType: false,
-						processData: false,
-						complete: function() {
-							that.is_uploading = false;
-							that.file_list();
-						},
-						success: function(data) {
-
-						},
-						error: function() {
-							// Log the error, show an alert, whatever works for you
-						}
-					});
+					this.upload_ajax();
 				}
 				else
 				{
-					var iframeName  = 'uploadiframe' + new Date().getTime();
-					$iframe   = $('<iframe name="' + iframeName + '" style=""></iframe>');
-
-					$form = $("<form />");
-					$form.attr('target', iframeName);
-					$form.attr('method', "post");
-					$form.attr('enctype', "multipart/form-data");
-					$form.attr('action', this.upload_url);
-					this.modal.find('input[name="'+this.file_input_name+'"]').clone().appendTo($form);
-
-					$('body').append($form);
-					$('body').append($iframe);
-
-					$form.submit();
-
-
-					console.log($iframe);
-					$iframe.one('load', function() {
-						console.log("sss");
-						console.log($iframe.contents().find('body').text());
-						/*
-						var data = JSON.parse($iframe.contents().find('body').text());
-						if (!data.success) $errorMsg.text(data.error);
-						*/
-						$iframe.remove();
-						$form.remove();
-					});
+					this.upload_iframe();
 				}
 			},
+			upload_ajax: function ()
+			{
+				var that = this;
+				var ajaxData = new FormData();
+
+				if (this.dropped_files) {
+					$.each( this.dropped_files, function(i, file) {
+						ajaxData.append( that.file_input_name, file );
+					});
+				}
+
+				$.ajax({
+					url: this.upload_url,
+					type: "post",
+					data: ajaxData,
+					dataType: 'json',
+					cache: false,
+					contentType: false,
+					processData: false,
+					complete: $.proxy(that.upload_complate,that),
+					success: $.proxy(that.upload_success,that),
+					error: function() {
+						// Log the error, show an alert, whatever works for you
+					}
+				});
+			},
+			upload_iframe: function ()
+			{
+				var iframeName  = 'uploadiframe' + new Date().getTime();
+				$iframe   = $('<iframe name="' + iframeName + '" style=""></iframe>');
+
+				$form = $("<form />");
+				$form.attr('target', iframeName);
+				$form.attr('method', "post");
+				$form.attr('enctype', "multipart/form-data");
+				$form.attr('action', this.upload_url);
+				this.modal.find('input[name="'+this.file_input_name+'"]').clone().appendTo($form);
+
+				$('body').append($form);
+				$('body').append($iframe);
+
+				$form.submit();
+
+
+				that = this;
+				$iframe.one('load', function() {
+					var data = JSON.parse($iframe.contents().find('body').text());
+					$iframe.remove();
+					$form.remove();
+					that.upload_complate();
+					that.upload_success(data);
+				});
+			},
+
+			upload_complate: function () {
+				this.is_uploading = false;
+				if (this.modal.find(".nmlb-frame-router .active").data("href") == "browser")
+					this.file_list();
+				else
+					this.modal.find(".nmlb-frame-router li[data-href=browser]").click();
+			},
+			upload_success: function (data) {
+				that = this;
+				first = Object.keys(data.files)[0];
+				say = 0;
+				inter = setInterval(function () {
+					find = that.modal.find('.nmlb-frame-content .nmlb-attachments .nmlb-attachment[data-id="'+first+'"]').length;
+					if (find)
+					{
+						that.clear_selections();
+						$.each(data.files, function (key, file) {
+							that.modal.find('.nmlb-frame-content .nmlb-attachments .nmlb-attachment[data-id="'+key+'"] .nmlb-attachment-preview').click();
+						});
+						clearInterval(inter);
+					}
+					say++;
+					if(say>200)
+						clearInterval(inter);
+
+				},100);
+			},
+
 			readLang : function () {
 				if (this.langs[this.lang] != undefined)
 					$.extend( true, this.l, this.langs[this.lang]);

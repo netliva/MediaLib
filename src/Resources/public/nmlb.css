@@ -19,6 +19,13 @@
 .nmlb-frame-router ul li.active { margin: -1px -1px 0; background: #fff; border: 1px solid #ddd; border-bottom: none; }
 .nmlb-frame-content { top: 84px;bottom: 61px;width: auto;margin: 0;overflow: auto;background: #fff;border-top: 1px solid #ddd;  }
 .nmlb-frame-toolbar { z-index: 100; bottom: 60px; }
+.nmlb-frame-file {display: none;}
+
+.nmlb-upload-content {position: absolute;top: 30%;left: 0;right: 0; text-align: center}
+.nmlb-upload-content div { font-size: 1.8em; color: #444; padding: 5px 0; }
+.nmlb-upload-content div small { font-size: 0.6em; }
+.nmlb-upload-content button {padding: 15px 30px;border: 1px solid #ccc;background: #f7f7f7;color: #555;border-radius: 2px;box-shadow: 0 1px 0 #ccc;}
+
 .nmlb-toolbar { position: absolute; top: 0; bottom: -45px; left: 0; right: 0; height: auto; overflow: initial; border-top: 1px solid #ddd; padding: 0 16px; }
 .nmlb-browser-toolbar { position: absolute; top: 0; left: 0; right: 300px; z-index: 100; height: 50px; padding: 0 16px; border: 0 solid #ddd; overflow: hidden; }
 .nmlb-browser .nmlb-attachments { position: absolute; top: 50px; left: 0; right: 300px; bottom: 0; overflow: auto; outline: 0; padding: 2px 8px 8px; margin: 0; }
