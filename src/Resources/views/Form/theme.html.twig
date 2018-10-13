@@ -1,9 +1,12 @@
 {% block netliva_media_lib_widget %}
-	<div>
+	<div class="nmlb-medialib-field">
+		<ul class="nmlb-attachments"></ul>
 		{%- set type = type|default('hidden') -%}
 		{{- block('form_widget_simple') -}}
+		{%- set input_id = id -%}
 		{%- set id = id~'_button' -%}
 		{%- set full_name = '' -%}
+		{%- set label =  translation_domain is same as(false) ? button_text : button_text|trans({}, translation_domain)  -%}
 		{{- block('button_widget') -}}
 	</div>
 	<script type="text/javascript">
@@ -12,7 +15,25 @@
 				if ($("#{{ id }}").openNetlivaMediaLib == undefined)
 					document.getElementById("{{ id }}").parentNode.innerHTML = '<i style="color: red;">Netliva Media Library JavaScript files is missing.</i>';
 				else
-					$("#{{ id }}").openNetlivaMediaLib();
+				{
+					var attachments = $("#{{ id }}").parents(".nmlb-medialib-field").find(".nmlb-attachments");
+					$("#{{ id }}").openNetlivaMediaLib({
+						callback: function (selectedMedias) {
+							attachments.html("");
+							var data = {};
+							$.each(selectedMedias, function (mediaId, mediaInfo) {
+								$.nmlb.prepare_attachment({id: mediaId, url: mediaInfo.url, filename: mediaInfo.filename, class:"selection"}).appendTo(attachments);
+								data[mediaId] = mediaInfo.filename;
+							})
+							$("#{{ input_id }}").val(JSON.stringify(data));
+						}
+					});
+					{% if form.vars.data and form.vars.data.files is defined and form.vars.data.files|length %}
+						{% for file in form.vars.data.files %}
+							$.nmlb.prepare_attachment({id: "{{ file.entity.id }}", url: "{{ file.uri }}", filename: "{{ file.filename }}", class:"selection"}).appendTo(attachments);
+						{% endfor %}
+					{% endif %}
+				}
 			else
 				document.getElementById("{{ id }}").parentNode.innerHTML = '<i style="color: red;">Netliva Media Library Module require JQuery.</i>';
 		}

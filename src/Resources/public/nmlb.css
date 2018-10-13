@@ -1,3 +1,7 @@
+.nmlb-medialib-field { display: inline-block; }
+.nmlb-medialib-field .nmlb-attachments { margin: 0; padding: 0; display: inline-block;vertical-align: middle; }
+.nmlb-medialib-field .nmlb-attachments .nmlb-attachment { width: 50px; padding: 3px; }
+
 .nmlb-modal { font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif; font-size: 12px; }
 .nmlb-modal * { box-sizing: content-box; }
 .nmlb-modal input[type=text], .nmlb-modal input[type=password], .nmlb-modal input[type=number], .nmlb-modal input[type=search], .nmlb-modal input[type=email], .nmlb-modal input[type=url], .nmlb-modal select, .nmlb-modal textarea {
@@ -33,6 +37,13 @@
 .nmlb-toolbar-left { float: left; height: 100%; max-width: 66%; }
 .nmlb-toolbar-right { float: right; height: 100%; max-width: 33%; }
 .nmlb-browser-search { width: 100%; height: auto; padding: 3px 6px; margin: 11px 1px 1px;}
+
+.nmlb-frame-toolbar .nmlb-toolbar-right button {
+	background:#0085ba; margin-top: 15px; border: 1px solid #006799; box-shadow: 0 1px 0 #006799;
+	color:#fff;   text-shadow: 0 -1px 1px #006799, 1px 0 1px #006799, 0 1px 1px #006799, -1px 0 1px #006799;
+	height: 25px; padding:2px 20px; border-radius: 2px; cursor: pointer;
+}
+.nmlb-frame-toolbar .nmlb-toolbar-right button:hover { background: #008ec2;  }
 
 .nmlb-browser .nmlb-browser-toolbar,
 .nmlb-browser .nmlb-attachments,

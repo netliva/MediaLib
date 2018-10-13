@@ -5,6 +5,9 @@ if (window.jQuery)
 		$.nmlb = {
 			// ===============
 			modal				: null,
+			settings			: {
+				callback: function () {}
+			},
 			selected_medias		: {},
 			dropped_files		: [],
 			file_input_name		: "nmlb_form[nmlb-file][]",
@@ -15,6 +18,7 @@ if (window.jQuery)
 				var div = document.createElement('div');
 				return (('draggable' in div) || ('ondragstart' in div && 'ondrop' in div)) && 'FormData' in window && 'FileReader' in window;
 			}(),
+
 			// === LANGUAGE ===
 			lang: "en",
 			langs: {},
@@ -31,11 +35,13 @@ if (window.jQuery)
 				upload_msg_l2	: "ya da",
 				upload_msg_btn	: "Dosya Seçin",
 				upload_msg_l3	: "Yüklenebilecek en büyük dosya boyutu: 2 MB.",
+				add				: "Ekle",
 			},
 
 			// === FUNCTIONS ===
-			netlivaMediaLib: function ()
+			netlivaMediaLib: function (settings)
 			{
+				this.settings = $.extend(this.settings, settings);
 				this.buildMediaModal();
 			},
 			buildMediaModal: function  ()
@@ -162,6 +168,7 @@ if (window.jQuery)
 
 				var search = $('<input placeholder="'+this.l.search_input_ph+'" class="nmlb-browser-search" type="search" id="nmlb-media-search-input"></input>');
 				var typing = $('<div class="nmlb-typing"><div style="width:100%;height:100%" class="nmlb-ellipsis"><div><div></div></div><div><div></div></div><div><div></div></div><div><div></div></div><div><div></div></div></div>');
+				var addBtn = $('<button class="nmlb-add-btn">'+this.l.add+'</button>');
 				var selection = $(
 					'<div class="nmlb-selection">' +
 						'<div class="nmlb-selection-info">' +
@@ -176,9 +183,12 @@ if (window.jQuery)
 
 
 				selection.find(".nmlb-clear-selection").click($.proxy(this.clear_selections, this));
+				addBtn.click($.proxy(this.add_selected_media, this));
+
 				typing.appendTo(this.modal.find(".nmlb-browser-toolbar .nmlb-toolbar-right"));
 				search.appendTo(this.modal.find(".nmlb-browser-toolbar .nmlb-toolbar-right"));
 				selection.appendTo(this.modal.find(".nmlb-frame-toolbar .nmlb-toolbar .nmlb-toolbar-left"));
+				addBtn.appendTo(this.modal.find(".nmlb-frame-toolbar .nmlb-toolbar .nmlb-toolbar-right"));
 
 				search.keyup($.proxy(this.search_change, this));
 
@@ -186,6 +196,11 @@ if (window.jQuery)
 
 				this.file_list();
 
+			},
+			add_selected_media: function ()
+			{
+				this.settings.callback(this.selected_medias);
+				this.close();
 			},
 			create_upload_content: function ()
 			{
@@ -305,6 +320,7 @@ if (window.jQuery)
 				var attachment = this.prepare_attachment({
 					id: data.id,
 					url: data.url,
+					filename: data.filename,
 					class: data.id in this.selected_medias ? "selected" : ""
 				});
 
@@ -314,7 +330,7 @@ if (window.jQuery)
 			{
 				var $el = $(e.currentTarget).parent();
 
-				if (!this.selected_medias.hasOwnProperty($el.data("id"))) this.selected_medias[$el.data("id")] = {"url":$el.find("img").attr("src")}
+				if (!this.selected_medias.hasOwnProperty($el.data("id"))) this.selected_medias[$el.data("id")] = { "url": $el.find("img").attr("src"), "filename":$el.data("filename") }
 				this.update_selection();
 
 				this.modal.find('.nmlb-attachment:not(*[data-id="'+$el.data("id")+'"])').removeClass("active");
@@ -339,9 +355,11 @@ if (window.jQuery)
 			},
 			update_selection : function () {
 				selection = this.modal.find(".nmlb-frame-toolbar .nmlb-selection");
+				console.log(this.selected_medias);
 				if (this.size(this.selected_medias))
 				{
 					selection.removeClass("empty");
+					this.modal.find(".nmlb-add-btn").show();
 					selection.find(".nmlb-count").text(this.size(this.selected_medias)+" "+this.l.selected);
 					attachments = selection.find(".nmlb-attachments");
 					attachments.html("");
@@ -351,6 +369,7 @@ if (window.jQuery)
 							class: "selection",
 							id: key,
 							url: val.url,
+							filename: val.filename,
 						});
 
 						attachment.find(".nmlb-attachment-preview").click(function () {
@@ -370,11 +389,12 @@ if (window.jQuery)
 				else
 				{
 					selection.addClass("empty");
+					this.modal.find(".nmlb-add-btn").hide();
 				}
 			},
 			prepare_attachment : function (data) {
-				data = $.extend({"url":"", "id":"", "class":""}, data);
-				var attachment = $('<li role="checkbox" aria-checked="true" class="nmlb-attachment '+data.class+'" data-id="'+data.id+'"></li>');
+				data = $.extend({"url":"", "id":"", "filename":"", "class":""}, data);
+				var attachment = $('<li role="checkbox" aria-checked="true" class="nmlb-attachment '+data.class+'" data-id="'+data.id+'" data-filename="'+data.filename+'"></li>');
 				var preview = $('<div class="nmlb-attachment-preview">' +
 					'<div class="thumbnail">' +
 					'<div class="centered">' +
@@ -505,8 +525,6 @@ if (window.jQuery)
 		$.fn.openNetlivaMediaLib = function(settings)
 		{
 			this.click(function(){
-				settings = $.extend({
-				}, settings);
 				$.nmlb.netlivaMediaLib(settings);
 				return false;
 			});
