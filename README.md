@@ -89,7 +89,17 @@ yada encore kullanarak projeye dahil edebilirsiniz;
 require('../../public/bundles/netlivamedialib/nmlb.css');
 require('../../public/bundles/netlivamedialib/nmlb.js');
 ```
+### Localization
 
+Ortam kütüphanesini farklı bir dilde kullanmak için 
+`bundles/netlivamedialib/localize` 
+klasörü içindeki js dosyalarından gerekli olanı  projenize dahil 
+ederek sağlayabilirsiniz.
+
+Örneğin;
+```html
+<script src="{{ asset('bundles/netlivamedialib/localize/tr.js' }}"></script>
+```
 
 Configurations
 ==============
