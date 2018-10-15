@@ -10,7 +10,7 @@
 	},
 	"require": {
 		"php": ">=5.3.3",
-		"symfony/framework-bundle": "~2.7|~3.0|~4.0",
+		"symfony/framework-bundle": "~3.0|~4.0",
 		"netliva/filetype": "~0.1"
 	},
 	"minimum-stability": "stable"

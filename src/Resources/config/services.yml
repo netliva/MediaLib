@@ -2,4 +2,5 @@ services:
   netliva.medialib_type:
     class: Netliva\MediaLibBundle\Form\Type\MediaLibType
     arguments: [ "@netliva.file.upload_helper" ]
-    tags: [ form.type ]
+    tags:
+      - { name: form.type }

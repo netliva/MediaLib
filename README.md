@@ -36,6 +36,11 @@ of the Composer documentation.
 Then, enable the bundle by adding it to the list of registered bundles
 in the `app/AppKernel.php` file of your project:
 
+_NetlivaFileTypeBundle has been installed as a dependency of NetlivaMediaLibBundle.
+ If you have not installed **NetlivaFileTypeBundle** before,
+ you must enable it because of the dependency._
+
+
 ```php
 <?php
 // app/AppKernel.php
@@ -48,6 +53,7 @@ class AppKernel extends Kernel
         $bundles = array(
             // ...
             new Netliva\MediaLibBundle\NetlivaMediaLibBundle(),
+            new Netliva\FileTypeBundle\NetlivaFileTypeBundle(),
         );
 
         // ...
@@ -56,3 +62,85 @@ class AppKernel extends Kernel
     // ...
 }
 ```
+
+Assetleri Projeye Dahil Edin
+----------------------------
+### Install assets
+
+Aşağıdaki komut ile assets'lerin kurulumunu gerçekleştirin
+
+`$ php bin/console assets:install` 
+
+Bu komut ile; `(Symfony >= 4.0)` *public/bundles/netlivamedialib* 
+`(Symfony >= 3.3)` *web/bundles/netlivamedialib* klasörü içerisinde 
+oluşan js ve css dosyalarını projenize dahil ediniz.
+
+ Dosyaları aşağıdaki gibi assetic yardımıyla projeye dahil edebilirsiniz; 
+
+```html
+<link href="{{ asset('bundles/netlivamedialib/nmlb.css' }}" rel="stylesheet" type="text/css">
+<script src="{{ asset('bundles/netlivamedialib/nmlb.js' }}"></script>
+```
+
+yada encore kullanarak projeye dahil edebilirsiniz;
+
+```javascript
+// assets/js/app.js
+require('../../public/bundles/netlivamedialib/nmlb.css');
+require('../../public/bundles/netlivamedialib/nmlb.js');
+```
+
+
+Configurations
+==============
+
+Routes Definations
+------------------
+
+```yaml
+netliva_file_route:
+  resource: .
+  type: netliva_file_route
+```
+
+Config Definations
+------------------
+Yükleyeceğiniz dosyaların nereye yükleneceğini ve 
+indirme linkinin neresi olacağını aşağıdaki kodları ayarlar dosyanıza ekleyerek
+düzenleyebilirsiniz. Bu ayarlar opsiyonel olup varsayılan değerler 
+aşağıdaki gibidir. 
+
+```yaml
+# Symfony >= 4.0. Create a dedicated netliva_config.yaml in config/packages with:
+# Symfony >= 3.3. Add in your app/config/config.yml:
+
+netliva_file_type:
+    file_config:
+        upload_dir: public/netliva_uploads
+        download_uri: /uploads
+```
+* **upload_dir:** dosyalarınızın proje ana klasöründen itibaren nereye yükleneceğini tanımlamanızı sağlar.
+* **download_uri:**  yüklenen dosyalarınızın hangi klasör altından indirileceğini gösteren sanal bir dizindir. 
+Dosyalarınız gerçekte bu klasör altında yeralmaz sadece dosyanın görünen url'ini belirler. 
+Eğer burada belirteceğiniz klasör gerçekte proje ana dizininde bulunursa görüntülemede sıkıntı çıkabilir.
+
+
+Basic Usage
+===========
+Öncelikle `json_array` veya `text` formatında veritabanı alanınızı oluşturun.
+Ardından bu alan için formtype'a aşağıdaki gibi tanımlamanızı ekleyin.
+
+ 
+ ```php
+<?php
+//...
+public function buildForm (FormBuilderInterface $formBuilder, array $options)
+{
+	//...
+	$formBuilder->add('images', NetlivaFileType::class, [ 'label' => 'Images', 'multiple' => false]);
+	//...
+}
+//...
+?>
+ ```
+ 
