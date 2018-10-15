@@ -63,6 +63,12 @@ class AppKernel extends Kernel
 }
 ```
 
+### Step 3: Database Yapısını Güncelleyin
+
+```
+php bin/console doctrine:schema:update --force
+```
+
 Assetleri Projeye Dahil Edin
 ----------------------------
 ### Install assets
