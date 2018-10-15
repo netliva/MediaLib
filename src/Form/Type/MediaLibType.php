@@ -24,24 +24,7 @@ class MediaLibType extends AbstractType
 		// DB'den veriyi çekerken
 		$getDataFromModel = function ($data) use ($builder)
 		{
-			$returnData = null;
-
-			if (is_string($data))
-				$data = @json_decode($data);
-
-			$returnData = new NetlivaDirectory();
-
-			if ($data)
-			{
-				foreach ($data as $mediaId => $info)
-				{
-					$file = $this->uploadHelperService->getNetlivaMediaFile($mediaId);
-					if($file)
-						$returnData->addFile($file);
-				}
-			}
-
-			return $returnData;
+			return $this->uploadHelperService->getNetlivaMediaFolder($data);
 		};
 
 		// Veriyi Forma Eklerken
@@ -60,12 +43,7 @@ class MediaLibType extends AbstractType
 		// DB'ye Kaydederken
 		$setDataToModel = function ($data) use ($builder, $options)
 		{
-			$returnData = null;
-
-			if (is_string($data))
-				$data = @json_decode($data);
-
-			return $data;
+			return $this->uploadHelperService->getNetlivaMediaFolder($data);
 		};
 
 

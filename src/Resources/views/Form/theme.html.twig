@@ -6,11 +6,12 @@
 		{%- set input_id = id -%}
 		{%- set id = id~'_button' -%}
 		{%- set full_name = '' -%}
+		{%- set type = 'button' -%}
 		{%- set label =  translation_domain is same as(false) ? button_text : button_text|trans({}, translation_domain)  -%}
 		{{- block('button_widget') -}}
 	</div>
 	<script type="text/javascript">
-		window.onload = function() {
+		window.addEventListener("load", function() {
 			if (window.jQuery)
 				if ($("#{{ id }}").openNetlivaMediaLib == undefined)
 					document.getElementById("{{ id }}").parentNode.innerHTML = '<i style="color: red;">Netliva Media Library JavaScript files is missing.</i>';
@@ -36,6 +37,6 @@
 				}
 			else
 				document.getElementById("{{ id }}").parentNode.innerHTML = '<i style="color: red;">Netliva Media Library Module require JQuery.</i>';
-		}
+		});
 	</script>
 {% endblock %}
