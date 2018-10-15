@@ -143,7 +143,7 @@ Eğer burada belirteceğiniz klasör gerçekte proje ana dizininde bulunursa gö
 
 Basic Usage
 ===========
-Öncelikle `json_array` veya `text` formatında veritabanı alanınızı oluşturun.
+Öncelikle `json_array` tipinde veritabanı alanınızı oluşturun.
 Ardından bu alan için formtype'a aşağıdaki gibi tanımlamanızı ekleyin.
 
  
