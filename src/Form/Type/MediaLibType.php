@@ -1,7 +1,7 @@
 <?php
 namespace Netliva\MediaLibBundle\Form\Type;
 
-use Netliva\FileTypeBundle\Service\NetlivaDirectory;
+use Netliva\FileTypeBundle\Service\NetlivaFolder;
 use Netliva\FileTypeBundle\Service\UploadHelperService;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
