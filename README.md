@@ -137,10 +137,19 @@ Ardından bu alan için formtype'a aşağıdaki gibi tanımlamanızı ekleyin.
 public function buildForm (FormBuilderInterface $formBuilder, array $options)
 {
 	//...
-	$formBuilder->add('images', NetlivaFileType::class, [ 'label' => 'Images', 'multiple' => false]);
+	$formBuilder->add('images', MediaLibType::class, [ 'label' => 'Images', 'button_text'=>"select file"]);
 	//...
 }
 //...
 ?>
  ```
+### Kaydedilen verileri kullanma
+ 
+kaydedilen tüm dosya bilgilerini `get_nl_mfolder()` twig fonksiyonu getirecektir. 
+ 
+```twig
+{% for image in get_nl_mfolder(entity.images).files %}
+    <img src="{{ image|nl_file_uri }}" />
+{% endfor %}
+```
  
