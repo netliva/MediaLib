@@ -147,25 +147,39 @@ Basic Usage
 Ardından bu alan için formtype'a aşağıdaki gibi tanımlamanızı ekleyin.
 
  
- ```php
+```php
 <?php
 //...
 public function buildForm (FormBuilderInterface $formBuilder, array $options)
 {
 	//...
-	$formBuilder->add('images', MediaLibType::class, [ 'label' => 'Images', 'button_text'=>"select file"]);
+	$formBuilder->add('images', MediaLibType::class, [ 'label' => 'Images', 'button_text'=>"select file", 'multiple'=>"true"]);
 	//...
 }
 //...
 ?>
- ```
+```
+_Multiple true ise çoklu dosya seçimi yapabilirsiniz, eğer false ise tek dosya seçimi yapabilirsiniz._ 
+ 
 ### Kaydedilen verileri kullanma
  
-kaydedilen tüm dosya bilgilerini `get_nl_mfolder()` twig fonksiyonu getirecektir. 
+#### Kaydedilen verileriniz çoklu ise
+ 
+Kaydedilen tüm dosya bilgilerini `get_nl_mfolder()` twig fonksiyonu getirecektir. 
+Gelen veriler içerisinden dosya yolunu almak için `nl_file_uri` twig filtresini kullanabilirsiniz.  
  
 ```twig
 {% for image in get_nl_mfolder(entity.images).files %}
     <img src="{{ image|nl_file_uri }}" />
 {% endfor %}
+```
+
+#### Kaydedilen verileriniz çoklu değil ise
+
+Kaydedilen tekil dosya bilginizi çekmek için `get_nl_mfile()` twig fonksiyonunu kullanabilirsiniz.
+Çektiğiniz veriler içerisinden dosya yolunu almak için `nl_file_uri` twig filtresini işinizi kolaylaştıracaktır.  
+
+```twig
+<img src="{{ get_nl_mfile(entity.image)|nl_file_uri }}" />
 ```
  

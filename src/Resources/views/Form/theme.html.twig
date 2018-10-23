@@ -19,6 +19,7 @@
 				{
 					var attachments = $("#{{ id }}").parents(".nmlb-medialib-field").find(".nmlb-attachments");
 					$("#{{ id }}").openNetlivaMediaLib({
+						multiple:{{ multiple ? "true":"false" }},
 						callback: function (selectedMedias) {
 							attachments.html("");
 							var data = {};
@@ -33,6 +34,8 @@
 						{% for file in form.vars.data.files %}
 							$.nmlb.prepare_attachment({id: "{{ file.entity.id }}", url: "{{ file.uri }}", filename: "{{ file.filename }}", class:"selection"}).appendTo(attachments);
 						{% endfor %}
+					{% elseif form.vars.data and form.vars.data.fileType is defined %}
+							$.nmlb.prepare_attachment({id: "{{ form.vars.data.entity.id }}", url: "{{ form.vars.data.uri }}", filename: "{{ form.vars.data.filename }}", class:"selection"}).appendTo(attachments);
 					{% endif %}
 				}
 			else

@@ -22,9 +22,13 @@ class MediaLibType extends AbstractType
 	public function buildForm (FormBuilderInterface $builder, array $options)
 	{
 		// DB'den veriyi çekerken
-		$getDataFromModel = function ($data) use ($builder)
+		$getDataFromModel = function ($data) use ($builder, $options)
 		{
-			return $this->uploadHelperService->getNetlivaMediaFolder($data);
+			if ($options['multiple'])
+				return $this->uploadHelperService->getNetlivaMediaFolder($data);
+
+			return $this->uploadHelperService->getNetlivaMediaFile($data);
+
 		};
 
 		// Veriyi Forma Eklerken
@@ -43,7 +47,13 @@ class MediaLibType extends AbstractType
 		// DB'ye Kaydederken
 		$setDataToModel = function ($data) use ($builder, $options)
 		{
-			return $this->uploadHelperService->getNetlivaMediaFolder($data);
+			if ($options['multiple'])
+				return $this->uploadHelperService->getNetlivaMediaFolder($data);
+
+			if (is_string($data))
+				$data = @json_decode($data);
+
+			return $this->uploadHelperService->getNetlivaMediaFile(array_keys((array)$data)[0]);
 		};
 
 
@@ -67,7 +77,7 @@ class MediaLibType extends AbstractType
 	public function configureOptions (OptionsResolver $resolver)
 	{
 		$resolver->setDefaults([
-			'multiple'		=> false,
+			'multiple'		=> true,
 			'button_text'	=> "Select",
 		]);	}
 

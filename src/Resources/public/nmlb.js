@@ -6,6 +6,7 @@ if (window.jQuery)
 			// ===============
 			modal				: null,
 			settings			: {
+				multiple: false,
 				callback: function () {}
 			},
 			selected_medias		: {},
@@ -41,7 +42,10 @@ if (window.jQuery)
 			// === FUNCTIONS ===
 			netlivaMediaLib: function (settings)
 			{
+
+				console.log(settings);
 				this.settings = $.extend(this.settings, settings);
+				console.log(this.settings.multiple);
 				this.buildMediaModal();
 				this.clear_selections();
 			},
@@ -331,6 +335,8 @@ if (window.jQuery)
 			{
 				var $el = $(e.currentTarget).parent();
 
+				if(!this.settings.multiple) this.clear_selections();
+
 				if (!this.selected_medias.hasOwnProperty($el.data("id"))) this.selected_medias[$el.data("id")] = { "url": $el.find("img").attr("src"), "filename":$el.data("filename") }
 				this.update_selection();
 
@@ -356,7 +362,6 @@ if (window.jQuery)
 			},
 			update_selection : function () {
 				selection = this.modal.find(".nmlb-frame-toolbar .nmlb-selection");
-				console.log(this.selected_medias);
 				if (this.size(this.selected_medias))
 				{
 					selection.removeClass("empty");

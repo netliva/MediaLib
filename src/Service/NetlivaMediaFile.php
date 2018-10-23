@@ -33,7 +33,12 @@ class NetlivaMediaFile extends NetlivaFile implements \JsonSerializable
 
 		parent::__construct($path, $uploadHelperService, $oriName);
 	}
-	
+
+
+	public function __toString ()
+	{
+		return (string) $this->getEntity()->getId();
+	}
 
 	public function jsonSerialize()
 	{
