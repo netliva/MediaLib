@@ -39,7 +39,7 @@
 				document.getElementById("{{ id }}").parentNode.innerHTML = '<i style="color: red;">Netliva Media Library Module require JQuery.</i>';
 		};
 
-		if (window.jQuery) init_{{ id }}();
+		if (window.jQuery && $("#{{ id }}").openNetlivaMediaLib != undefined) init_{{ id }}();
 		else window.addEventListener("load", init_{{ id }});
 	</script>
 {% endblock %}
