@@ -25,7 +25,7 @@
 .nmlb-frame-toolbar { z-index: 100; bottom: 60px; }
 .nmlb-frame-file {display: none;}
 
-.nmlb-upload-content {position: absolute;top: 30%;left: 0;right: 0; text-align: center}
+.nmlb-upload-content { position: absolute;top: 30%;left: 0;right: 0; text-align: center; }
 .nmlb-upload-content div { font-size: 1.8em; color: #444; padding: 5px 0; }
 .nmlb-upload-content div small { font-size: 0.6em; }
 .nmlb-upload-content button {padding: 15px 30px;border: 1px solid #ccc;background: #f7f7f7;color: #555;border-radius: 2px;box-shadow: 0 1px 0 #ccc;}
@@ -49,6 +49,7 @@
 .nmlb-browser .nmlb-attachments,
 .nmlb-browser .nmlb-loading,
 .nmlb-browser .nmlb-upload-content { right: 300px;  }
+.nmlb-browser .nmlb-upload-content { opacity: 0; transition: opacity 250ms; }
 
 .nmlb-attachment {
 	position: relative; float: left; padding: 8px; margin: 0; color: #444; cursor: pointer; list-style: none; text-align: center;

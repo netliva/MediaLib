@@ -275,6 +275,11 @@ if (window.jQuery)
 							attcs.show();
 							setTimeout(function () { attcs.css("opacity", 1); }, 10);
 
+							if (!response.length)
+							{
+								notfd.show();
+								setTimeout(function () { notfd.css("opacity", 1); }, 10);
+							}
 						},300);
 
 						if (response.length)
@@ -283,11 +288,6 @@ if (window.jQuery)
 							$.each(response, function (key, data) {
 								that.new_attachment(data);
 							})
-						}
-						else
-						{
-							notfd.show();
-							setTimeout(function () { notfd.css("opacity", 1); }, 10);
 						}
 					}
 				});
