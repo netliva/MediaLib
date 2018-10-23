@@ -11,7 +11,7 @@
 		{{- block('button_widget') -}}
 	</div>
 	<script type="text/javascript">
-		window.addEventListener("load", function() {
+		function init_{{ id }}() {
 			if (window.jQuery)
 				if ($("#{{ id }}").openNetlivaMediaLib == undefined)
 					document.getElementById("{{ id }}").parentNode.innerHTML = '<i style="color: red;">Netliva Media Library JavaScript files is missing.</i>';
@@ -37,6 +37,9 @@
 				}
 			else
 				document.getElementById("{{ id }}").parentNode.innerHTML = '<i style="color: red;">Netliva Media Library Module require JQuery.</i>';
-		});
+		};
+
+		if (window.jQuery) init_{{ id }}();
+		else window.addEventListener("load", init_{{ id }});
 	</script>
 {% endblock %}
