@@ -43,6 +43,7 @@ if (window.jQuery)
 			{
 				this.settings = $.extend(this.settings, settings);
 				this.buildMediaModal();
+				this.clear_selections();
 			},
 			buildMediaModal: function  ()
 			{
