@@ -42,10 +42,7 @@ if (window.jQuery)
 			// === FUNCTIONS ===
 			netlivaMediaLib: function (settings)
 			{
-
-				console.log(settings);
 				this.settings = $.extend(this.settings, settings);
-				console.log(this.settings.multiple);
 				this.buildMediaModal();
 				this.clear_selections();
 			},
@@ -322,12 +319,12 @@ if (window.jQuery)
 			{
 				var attachments = this.modal.find('.nmlb-browser .nmlb-attachments');
 
-				var attachment = this.prepare_attachment({
+				var attachment = this.prepare_attachment("browser",{
 					id: data.id,
 					url: data.url,
 					filename: data.filename,
 					class: data.id in this.selected_medias ? "selected" : ""
-				});
+				}, data.data);
 
 				attachment.appendTo(attachments);
 			},
@@ -371,7 +368,7 @@ if (window.jQuery)
 					attachments.html("");
 					var that = this;
 					$.each(this.selected_medias, function (key, val) {
-						var attachment = that.prepare_attachment({
+						var attachment = that.prepare_attachment("selection",{
 							class: "selection",
 							id: key,
 							url: val.url,
@@ -398,20 +395,52 @@ if (window.jQuery)
 					this.modal.find(".nmlb-add-btn").hide();
 				}
 			},
-			prepare_attachment : function (data) {
+			/* type: "selection" | "browser" | "field" */
+			prepare_attachment : function (type, data, dataset)
+			{
+				file_name = "";
+				if (dataset == undefined)
+					file_appearance = $('.nmlb-frame-content .nmlb-attachments .nmlb-attachment[data-id="'+data.id+'"] .centered').html();
+				else
+				{
+					if (dataset.mimeType && dataset.extension)
+					{
+						mime = dataset.mimeType.split("/");
+						if (mime[0] == "image") file_appearance = '<img src="'+data.url+'">';
+						else file_appearance = '<span class="nl_file_icon nl_file_icon_'+dataset.extension+'"></span>';
+					}
+					else file_appearance = '<span class="nl_file_icon"></span>';
+
+					if (!file_appearance.match(/<img/))
+					{
+						file_name = '<span class="nl_file_name">'+data.filename+'</span>';
+					}
+				}
+
 				data = $.extend({"url":"", "id":"", "filename":"", "class":""}, data);
 				var attachment = $('<li role="checkbox" aria-checked="true" class="nmlb-attachment '+data.class+'" data-id="'+data.id+'" data-filename="'+data.filename+'"></li>');
 				var preview = $('<div class="nmlb-attachment-preview">' +
 					'<div class="thumbnail">' +
 					'<div class="centered">' +
-					'<img src="'+data.url+'">' +
-					'</div>' +
+					file_appearance +
+					'</div>' + file_name +
 					'</div>' +
 					'</div>');
-				preview.click($.proxy(this.select_attachment, this));
+
+				// dosya ile ilgili gelen verileri attachment'a data olarak ekle
+				if (dataset != undefined)
+					$.each(dataset, function (key, value) { attachment.data(key, value); });
+
+				if (type == "field")
+				{
+					preview = $("<a>").attr({target:"_blank", href:data.url}).append(preview);
+				}
+				else
+					preview.click($.proxy(this.select_attachment, this));
+
 				preview.appendTo(attachment);
 
-				if (data.class != "selection")
+				if (type == "browser")
 				{
 					var deselect = $('<button type="button" class="check"><span class="nmlb-icon"></span></button>');
 					deselect.click($.proxy(this.deselect_attachment,this));

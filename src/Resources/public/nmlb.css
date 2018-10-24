@@ -123,10 +123,56 @@
 .nmlb-uploader-window .nmlb-progress-bar div { background: #fff}
 
 
+.nl_file_name { font-size:10px; position: absolute;left: 0;right: 0;bottom: 0;overflow: hidden;max-height: 100%;word-wrap: break-word;text-align: center;font-weight: 600;background: rgba(255,255,255,.8);box-shadow: inset 0 0 0 1px rgba(0,0,0,.15);}
+.nmlb-medialib-field .nl_file_name {font-size: 7px;}
+.nl_file_icon {
+	-webkit-transform: translate(-50%,-50%);transform: translate(-50%,-50%);position: absolute;top: 0;left: 0;max-height: 60%; max-width: 60%; height: 60%; width: 60%;
+	background-repeat: no-repeat; background-position: center center; background-size: contain; margin-top:-10%; background-image: url("images/files/default.png")
+}
+.nl_file_icon_3ds { background-image: url("images/files/3ds.png")}
+.nl_file_icon_aac { background-image: url("images/files/aac.png")}
+.nl_file_icon_ai { background-image: url("images/files/ai.png")}
+.nl_file_icon_avi { background-image: url("images/files/avi.png")}
+.nl_file_icon_bmp { background-image: url("images/files/bmp.png")}
+.nl_file_icon_cad { background-image: url("images/files/cad.png")}
+.nl_file_icon_cdr { background-image: url("images/files/cdr.png")}
+.nl_file_icon_css { background-image: url("images/files/css.png")}
+.nl_file_icon_dat { background-image: url("images/files/dat.png")}
+.nl_file_icon_dll { background-image: url("images/files/dll.png")}
+.nl_file_icon_dmg { background-image: url("images/files/dmg.png")}
+.nl_file_icon_doc { background-image: url("images/files/doc.png")}
+.nl_file_icon_eps { background-image: url("images/files/eps.png")}
+.nl_file_icon_fla { background-image: url("images/files/fla.png")}
+.nl_file_icon_flv { background-image: url("images/files/flv.png")}
+.nl_file_icon_gif { background-image: url("images/files/gif.png")}
+.nl_file_icon_html { background-image: url("images/files/html.png")}
+.nl_file_icon_indd { background-image: url("images/files/indd.png")}
+.nl_file_icon_iso { background-image: url("images/files/iso.png")}
+.nl_file_icon_jpg { background-image: url("images/files/jpg.png")}
+.nl_file_icon_js { background-image: url("images/files/js.png")}
+.nl_file_icon_midi { background-image: url("images/files/midi.png")}
+.nl_file_icon_mov { background-image: url("images/files/mov.png")}
+.nl_file_icon_mp3 { background-image: url("images/files/mp3.png")}
+.nl_file_icon_mpg { background-image: url("images/files/mpg.png")}
+.nl_file_icon_pdf { background-image: url("images/files/pdf.png")}
+.nl_file_icon_php { background-image: url("images/files/php.png")}
+.nl_file_icon_png { background-image: url("images/files/png.png")}
+.nl_file_icon_ppt { background-image: url("images/files/ppt.png")}
+.nl_file_icon_ps { background-image: url("images/files/ps.png")}
+.nl_file_icon_psd { background-image: url("images/files/psd.png")}
+.nl_file_icon_raw { background-image: url("images/files/raw.png")}
+.nl_file_icon_sql { background-image: url("images/files/sql.png")}
+.nl_file_icon_svg { background-image: url("images/files/svg.png")}
+.nl_file_icon_tif { background-image: url("images/files/tif.png")}
+.nl_file_icon_txt { background-image: url("images/files/txt.png")}
+.nl_file_icon_wmv { background-image: url("images/files/wmv.png")}
+.nl_file_icon_xls { background-image: url("images/files/xls.png")}
+.nl_file_icon_xml { background-image: url("images/files/xml.png")}
+.nl_file_icon_zip { background-image: url("images/files/zip.png")}
 
-. {}
-. {}
-. {}
+
+
+
 
 
 .nmlb-typing { position: absolute;right: 15px;top: 7px; opacity: 0; pointer-events: none; transition: opacity 250ms; }

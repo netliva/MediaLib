@@ -1,4 +1,18 @@
+
+{% macro prepare_attachment(file) %}
+	$.nmlb.prepare_attachment("field", {
+		id: "{{ file.entity.id }}",
+		url: "{{ file.uri }}",
+		filename: "{{ file.filename }}",
+		class:"selection",
+	},{
+		mimeType  : {{ (file.entity.fileInfo["mimeType"] is defined ? '"'~file.entity.fileInfo["mimeType"]~'"' : 'null')|raw }},
+		extension : {{ (file.entity.fileInfo["extension"] is defined ? '"'~file.entity.fileInfo["extension"]~'"' : 'null')|raw }}
+	}).appendTo(attachments);
+{% endmacro %}
+
 {% block netliva_media_lib_widget %}
+	{% import _self as macro %}
 	<div class="nmlb-medialib-field">
 		<ul class="nmlb-attachments"></ul>
 		{%- set type = type|default('hidden') -%}
@@ -24,7 +38,7 @@
 							attachments.html("");
 							var data = {};
 							$.each(selectedMedias, function (mediaId, mediaInfo) {
-								$.nmlb.prepare_attachment({id: mediaId, url: mediaInfo.url, filename: mediaInfo.filename, class:"selection"}).appendTo(attachments);
+								$.nmlb.prepare_attachment("field", {id: mediaId, url: mediaInfo.url, filename: mediaInfo.filename, class:"selection"}).appendTo(attachments);
 								data[mediaId] = mediaInfo.filename;
 							})
 							$("#{{ input_id }}").val(JSON.stringify(data));
@@ -32,10 +46,10 @@
 					});
 					{% if form.vars.data and form.vars.data.files is defined and form.vars.data.files|length %}
 						{% for file in form.vars.data.files %}
-							$.nmlb.prepare_attachment({id: "{{ file.entity.id }}", url: "{{ file.uri }}", filename: "{{ file.filename }}", class:"selection"}).appendTo(attachments);
+							{{ macro.prepare_attachment(file) }}
 						{% endfor %}
 					{% elseif form.vars.data and form.vars.data.fileType is defined %}
-							$.nmlb.prepare_attachment({id: "{{ form.vars.data.entity.id }}", url: "{{ form.vars.data.uri }}", filename: "{{ form.vars.data.filename }}", class:"selection"}).appendTo(attachments);
+						{{ macro.prepare_attachment(form.vars.data) }}
 					{% endif %}
 				}
 			else
