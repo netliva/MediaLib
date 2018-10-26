@@ -51,7 +51,9 @@ class MediaLibType extends AbstractType
 				return $this->uploadHelperService->getNetlivaMediaFolder($data);
 
 			if (is_string($data))
-				$data = @json_decode($data);
+				$data = @json_decode($data, true);
+
+			if (!is_array($data) || !count($data)) return null;
 
 			return $this->uploadHelperService->getNetlivaMediaFile(array_keys((array)$data)[0]);
 		};

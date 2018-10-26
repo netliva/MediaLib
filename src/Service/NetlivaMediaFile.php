@@ -37,7 +37,7 @@ class NetlivaMediaFile extends NetlivaFile implements \JsonSerializable
 
 	public function __toString ()
 	{
-		return (string) $this->getEntity()->getId();
+		return (string) json_encode([$this->getEntity()->getId()=>$this->getFilename()]);
 	}
 
 	public function jsonSerialize()
