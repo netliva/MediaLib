@@ -63,32 +63,31 @@ class AppKernel extends Kernel
 }
 ```
 
-### Step 3: Database Yapısını Güncelleyin
+### Step 3: Update Database Schema
 
 ```
 php bin/console doctrine:schema:update --force
 ```
 
-Assetleri Projeye Dahil Edin
+Include Assets to Your Project
 ----------------------------
 ### Install assets
 
-Aşağıdaki komut ile assets'lerin kurulumunu gerçekleştirin
+Install assets as shown below
 
 `$ php bin/console assets:install` 
 
-Bu komut ile; `(Symfony >= 4.0)` *public/bundles/netlivamedialib* 
-`(Symfony >= 3.3)` *web/bundles/netlivamedialib* klasörü içerisinde 
-oluşan js ve css dosyalarını projenize dahil ediniz.
+This command will create asset files in folders which; `(Symfony >= 4.0)` *public/bundles/netlivamedialib* 
+`(Symfony >= 3.3)` *web/bundles/netlivamedialib* .
 
- Dosyaları aşağıdaki gibi assetic yardımıyla projeye dahil edebilirsiniz; 
+ Include files which created by assets command, into your project: 
 
 ```html
 <link href="{{ asset('bundles/netlivamedialib/nmlb.css' }}" rel="stylesheet" type="text/css">
 <script src="{{ asset('bundles/netlivamedialib/nmlb.js' }}"></script>
 ```
 
-yada encore kullanarak projeye dahil edebilirsiniz;
+or using webpack encore;
 
 ```javascript
 // assets/js/app.js
@@ -97,12 +96,10 @@ require('../../public/bundles/netlivamedialib/nmlb.js');
 ```
 ### Localization
 
-Ortam kütüphanesini farklı bir dilde kullanmak için 
-`bundles/netlivamedialib/localize` 
-klasörü içindeki js dosyalarından gerekli olanı  projenize dahil 
-ederek sağlayabilirsiniz.
+To using MediaLib with different languages, include the js file to your project under  
+`bundles/netlivamedialib/localize`.
 
-Örneğin;
+For Example;
 ```html
 <script src="{{ asset('bundles/netlivamedialib/localize/tr.js' }}"></script>
 ```
@@ -121,10 +118,7 @@ netliva_file_route:
 
 Config Definations
 ------------------
-Yükleyeceğiniz dosyaların nereye yükleneceğini ve 
-indirme linkinin neresi olacağını aşağıdaki kodları ayarlar dosyanıza ekleyerek
-düzenleyebilirsiniz. Bu ayarlar opsiyonel olup varsayılan değerler 
-aşağıdaki gibidir. 
+You can configure your upload folder or your download uri as shown below. This settings are optional and default values are shown below.
 
 ```yaml
 # Symfony >= 4.0. Create a dedicated netliva_config.yaml in config/packages with:
@@ -135,16 +129,14 @@ netliva_file_type:
         upload_dir: public/netliva_uploads
         download_uri: /uploads
 ```
-* **upload_dir:** dosyalarınızın proje ana klasöründen itibaren nereye yükleneceğini tanımlamanızı sağlar.
-* **download_uri:**  yüklenen dosyalarınızın hangi klasör altından indirileceğini gösteren sanal bir dizindir. 
-Dosyalarınız gerçekte bu klasör altında yeralmaz sadece dosyanın görünen url'ini belirler. 
-Eğer burada belirteceğiniz klasör gerçekte proje ana dizininde bulunursa görüntülemede sıkıntı çıkabilir.
+* **upload_dir:** This options sets where your files will be uploaded starts from project root directory.
+* **download_uri:**  This option sets a virtual folder name where your folders will be downloaded from. If there is a folder with this name in your project root directory, it would cause error
 
 
 Basic Usage
 ===========
-Öncelikle `json_array` tipinde veritabanı alanınızı oluşturun.
-Ardından bu alan için formtype'a aşağıdaki gibi tanımlamanızı ekleyin.
+Firstly add a field as `json_array` type in your entity.
+Then simply add MediaLibType to your form with this field.
 
  
 ```php
@@ -159,14 +151,14 @@ public function buildForm (FormBuilderInterface $formBuilder, array $options)
 //...
 ?>
 ```
-_Multiple true ise çoklu dosya seçimi yapabilirsiniz, eğer false ise tek dosya seçimi yapabilirsiniz._ 
+_with Multiple true you can select multiple files, or with false it allows you to select one file only._ 
  
-### Kaydedilen verileri kullanma
+### Use inserted datas to field
  
-#### Kaydedilen verileriniz çoklu ise
+#### If your data is multiple uploaded
  
-Kaydedilen tüm dosya bilgilerini `get_nl_mfolder()` twig fonksiyonu getirecektir. 
-Gelen veriler içerisinden dosya yolunu almak için `nl_file_uri` twig filtresini kullanabilirsiniz.  
+`get_nl_mfolder()` twig function will return folder information from  field. 
+You can use `nl_file_uri` twig filter to get file path from field.  
  
 ```twig
 {% for image in get_nl_mfolder(entity.images).files %}
@@ -174,10 +166,10 @@ Gelen veriler içerisinden dosya yolunu almak için `nl_file_uri` twig filtresin
 {% endfor %}
 ```
 
-#### Kaydedilen verileriniz çoklu değil ise
+#### If your data is single file uploaded
 
-Kaydedilen tekil dosya bilginizi çekmek için `get_nl_mfile()` twig fonksiyonunu kullanabilirsiniz.
-Çektiğiniz veriler içerisinden dosya yolunu almak için `nl_file_uri` twig filtresini işinizi kolaylaştıracaktır.  
+`get_nl_mfile()` twig function will return file information from field.
+You can use `nl_file_uri` twig filter to get file path from field.  
 
 ```twig
 <img src="{{ get_nl_mfile(entity.image)|nl_file_uri }}" />
