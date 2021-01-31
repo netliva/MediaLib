@@ -141,6 +141,7 @@
 .nl_file_icon_dll { background-image: url("images/files/dll.png")}
 .nl_file_icon_dmg { background-image: url("images/files/dmg.png")}
 .nl_file_icon_doc { background-image: url("images/files/doc.png")}
+.nl_file_icon_docx { background-image: url("images/files/doc.png")}
 .nl_file_icon_eps { background-image: url("images/files/eps.png")}
 .nl_file_icon_fla { background-image: url("images/files/fla.png")}
 .nl_file_icon_flv { background-image: url("images/files/flv.png")}
@@ -167,6 +168,7 @@
 .nl_file_icon_txt { background-image: url("images/files/txt.png")}
 .nl_file_icon_wmv { background-image: url("images/files/wmv.png")}
 .nl_file_icon_xls { background-image: url("images/files/xls.png")}
+.nl_file_icon_xlsx { background-image: url("images/files/xls.png")}
 .nl_file_icon_xml { background-image: url("images/files/xml.png")}
 .nl_file_icon_zip { background-image: url("images/files/zip.png")}
 

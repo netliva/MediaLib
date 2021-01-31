@@ -21,23 +21,12 @@ class NetlivaMediaFile extends NetlivaFile implements \JsonSerializable
 	/** @var Files */
 	private $entity;
 
-	public function __construct ($mediaId, UploadHelperService $uploadHelperService)
-	{
-		$media = $uploadHelperService->getMedia($mediaId);
-		$this->setEntity($media);
-		$path = $uploadHelperService->getFilePath($media->getFileInfo());
-
-		$oriName = null;
-		if (is_array($media->getFileInfo()) and key_exists("original_name",$media->getFileInfo()))
-			$oriName = $media->getFileInfo()["original_name"];
-
-		parent::__construct($path, $uploadHelperService, $oriName);
-	}
+	public function __construct () {}
 
 
 	public function __toString ()
 	{
-		return (string) json_encode([$this->getEntity()->getId()=>$this->getFilename()]);
+		return (string) json_encode([$this->getEntity()->getId() => parent::__toString()]);
 	}
 
 	public function jsonSerialize()
@@ -69,5 +58,11 @@ class NetlivaMediaFile extends NetlivaFile implements \JsonSerializable
 		$this->entity = $entity;
 	}
 
+	public function setVars(NetlivaFile $fileInfo)
+	{
+		$this->setSubfolder($fileInfo->getSubfolder());
+		$this->setPath($fileInfo->getPath());
+		$this->setFilename($fileInfo->getFilename());
+	}
 
 }

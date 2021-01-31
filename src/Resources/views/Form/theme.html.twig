@@ -2,12 +2,12 @@
 {% macro prepare_attachment(file) %}
 	$.nmlb.prepare_attachment("field", {
 		id: "{{ file.entity.id }}",
-		url: "{{ file.uri }}",
+		url: "{{ file|nl_file_uri }}",
 		filename: "{{ file.filename }}",
 		class:"selection",
 	},{
-		mimeType  : {{ (file.entity.fileInfo["mimeType"] is defined ? '"'~file.entity.fileInfo["mimeType"]~'"' : 'null')|raw }},
-		extension : {{ (file.entity.fileInfo["extension"] is defined ? '"'~file.entity.fileInfo["extension"]~'"' : 'null')|raw }}
+		mimeType  : {{ (file.mimeType ? '"'~file.mimeType~'"' : 'null')|raw }},
+		extension : {{ (file.extension ? '"'~file.extension~'"' : 'null')|raw }}
 	}).appendTo(attachments);
 {% endmacro %}
 
@@ -44,12 +44,12 @@
 							$("#{{ input_id }}").val(JSON.stringify(data));
 						}
 					});
-					{% if form.vars.data and form.vars.data.files is defined and form.vars.data.files|length %}
-						{% for file in form.vars.data.files %}
+					{% if value and value.files is defined and value.files|length %}
+						{% for file in value.files %}
 							{{ macro.prepare_attachment(file) }}
 						{% endfor %}
-					{% elseif form.vars.data and form.vars.data.fileType is defined %}
-						{{ macro.prepare_attachment(form.vars.data) }}
+					{% elseif value and value.fileType is defined %}
+						{{ macro.prepare_attachment(value) }}
 					{% endif %}
 				}
 			else

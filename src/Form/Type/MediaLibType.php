@@ -13,10 +13,10 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class MediaLibType extends AbstractType
 {
-	private $uploadHelperService;
+	private $uhs;
 	public function __construct (UploadHelperService $uploadHelperService) {
 
-		$this->uploadHelperService = $uploadHelperService;
+		$this->uhs = $uploadHelperService;
 	}
 
 	public function buildForm (FormBuilderInterface $builder, array $options)
@@ -25,16 +25,26 @@ class MediaLibType extends AbstractType
 		$getDataFromModel = function ($data) use ($builder, $options)
 		{
 			if ($options['multiple'])
-				return $this->uploadHelperService->getNetlivaMediaFolder($data);
+				return $this->uhs->getNetlivaMediaFolder($data);
 
-			return $this->uploadHelperService->getNetlivaMediaFile($data);
+			return $this->uhs->getNetlivaMediaFile($data);
 
 		};
 
 		// Veriyi Forma Eklerken
-		$setDataToView = function($data) use ($builder)
+		$setDataToView = function($data) use ($builder, $options)
 		{
 			// if (is_array($data)) return null;
+			dump('Forma', $data);
+
+			if (is_string($data))
+			{
+				if ($options['multiple'])
+					return $this->uhs->getNetlivaMediaFolder($data);
+
+				return $this->uhs->getNetlivaMediaFile($data);
+			}
+
 			return $data;
 		};
 
@@ -48,14 +58,28 @@ class MediaLibType extends AbstractType
 		$setDataToModel = function ($data) use ($builder, $options)
 		{
 			if ($options['multiple'])
-				return $this->uploadHelperService->getNetlivaMediaFolder($data);
+			{
+				$dir =  $this->uhs->getNetlivaMediaFolder($data);
+
+				if ($options['return_data_type'] == 'string') return $dir->__toString();
+
+				if ($options['return_data_type'] == 'array') return $dir->jsonSerialize();
+
+				return $dir;
+			}
 
 			if (is_string($data))
 				$data = @json_decode($data, true);
 
 			if (!is_array($data) || !count($data)) return null;
 
-			return $this->uploadHelperService->getNetlivaMediaFile(array_keys((array)$data)[0]);
+			$file = $this->uhs->getNetlivaMediaFile(array_keys((array)$data)[0]);
+
+			if ($options['return_data_type'] == 'string') return $file->__toString();
+
+			if ($options['return_data_type'] == 'array') return $file->jsonSerialize();
+
+			return $file;
 		};
 
 
@@ -79,9 +103,11 @@ class MediaLibType extends AbstractType
 	public function configureOptions (OptionsResolver $resolver)
 	{
 		$resolver->setDefaults([
-			'multiple'		=> true,
-			'button_text'	=> "Select",
-		]);	}
+		   'multiple'         => true,
+		   'button_text'      => "Select",
+		   'return_data_type' => "array",
+		]);
+	}
 
 	public function getBlockPrefix ()
 	{
