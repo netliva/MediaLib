@@ -7,34 +7,13 @@ namespace Netliva\MediaLibBundle\Entity;
  */
 class Files
 {
-	/**
-	 * @var integer
-	 */
-	private $id;
-	/**
-	 * @var string
-	 */
-	private $title;
-	/**
-	 * @var string | null
-	 */
-	private $caption;
-	/**
-	 * @var string | null
-	 */
-	private $alt;
-	/**
-	 * @var string | null
-	 */
-	private $description;
-	/**
-	 * @var \DateTime
-	 */
-	private $addAt;
-	/**
-	 * @var array
-	 */
-	private $fileInfo;
+	private int $id;
+	private string $title;
+	private ?string $caption;
+	private ?string $alt;
+	private ?string $description;
+	private \DateTime $addAt;
+	private array $fileInfo;
 
 	/**
 	 * @return int|null
@@ -144,20 +123,14 @@ class Files
         return $this;
     }
 
-	/**
-	 * @return \DateTimeInterface|null
-	 */
-	public function getAddAt(): ?\DateTimeInterface
+
+	public function getAddAt(): ?\DateTime
     {
         return $this->addAt;
     }
 
-	/**
-	 * @param \DateTimeInterface $addAt
-	 *
-	 * @return Files
-	 */
-	public function setAddAt(\DateTimeInterface $addAt): self
+
+	public function setAddAt(\DateTime $addAt): self
     {
         $this->addAt = $addAt;
 

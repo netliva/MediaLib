@@ -18,10 +18,11 @@ use Netliva\FileTypeBundle\Service\UploadHelperService;
 class NetlivaMediaFile extends NetlivaFile implements \JsonSerializable
 {
 
-	/** @var Files */
-	private $entity;
+	private ?Files $entity = null;
 
-	public function __construct () {}
+	public function __construct () {
+        parent::__construct();
+    }
 
 
 	public function __toString ()
@@ -29,7 +30,7 @@ class NetlivaMediaFile extends NetlivaFile implements \JsonSerializable
 		return (string) json_encode([$this->getEntity()->getId() => parent::__toString()]);
 	}
 
-	public function jsonSerialize()
+	public function jsonSerialize(): array
 	{
 		return parent::jsonSerialize() + [
 			"mediaId"			=> $this->getEntity()->getId(),

@@ -9,8 +9,8 @@
 		}
 	},
 	"require": {
-		"php": ">=5.3.3",
-		"symfony/framework-bundle": "~3.0|~4.0",
+		"php": ">=7.4",
+		"symfony/framework-bundle": ">=5.4",
 		"netliva/filetype": "~0.1"
 	},
 	"minimum-stability": "stable"

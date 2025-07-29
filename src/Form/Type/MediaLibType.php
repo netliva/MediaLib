@@ -19,7 +19,7 @@ class MediaLibType extends AbstractType
 		$this->uhs = $uploadHelperService;
 	}
 
-	public function buildForm (FormBuilderInterface $builder, array $options)
+	public function buildForm (FormBuilderInterface $builder, array $options): void
 	{
 		// DB'den veriyi çekerken
 		$getDataFromModel = function ($data) use ($builder, $options)
@@ -100,7 +100,7 @@ class MediaLibType extends AbstractType
 		$view->vars['button_text'] = $options['button_text'];
 	}
 
-	public function configureOptions (OptionsResolver $resolver)
+	public function configureOptions (OptionsResolver $resolver): void
 	{
 		$resolver->setDefaults([
 		   'multiple'         => true,
@@ -109,12 +109,12 @@ class MediaLibType extends AbstractType
 		]);
 	}
 
-	public function getBlockPrefix ()
+	public function getBlockPrefix (): string
 	{
 		return 'netliva_media_lib';
 	}
 
-	public function getParent ()
+	public function getParent (): ?string
 	{
 		return TextType::class;
 	}
