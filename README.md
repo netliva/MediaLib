@@ -135,7 +135,7 @@ netliva_file_type:
 
 Basic Usage
 ===========
-Firstly add a field as `json_array` type in your entity.
+Firstly add a field as `json` type in your entity.
 Then simply add MediaLibType to your form with this field.
 
  

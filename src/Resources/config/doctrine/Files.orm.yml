@@ -9,7 +9,7 @@ Netliva\MediaLibBundle\Entity\Files:
     fields:
         fileInfo:
             column: NF_FileInfo
-            type: json_array
+            type: json
         title:
             column: NF_Title
             type: string
