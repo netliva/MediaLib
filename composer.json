@@ -1,5 +1,6 @@
 {
 	"name": "netliva/medialib",
+	"version": "1.0.2",
 	"license": "MIT",
 	"type": "library",
 	"description": "Netliva Media Library",
